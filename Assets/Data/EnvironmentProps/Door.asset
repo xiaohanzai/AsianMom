@@ -16,12 +16,11 @@ MonoBehaviour:
     type: 3}
   SpawnAmount: 1
   MaxIterations: 1000
-  CheckForNonPropCollision: 1
-  SpawnLocations: 5
-  Labels: 4
+  SpawnLoc: 5
+  Labels: -1
   CheckOverlaps: 1
   OverrideBounds: -1
   LayerMask:
     serializedVersion: 2
-    m_Bits: 65
-  SurfaceClearanceDistance: 0.2
+    m_Bits: 64
+  SurfaceClearanceDistance: 0.1

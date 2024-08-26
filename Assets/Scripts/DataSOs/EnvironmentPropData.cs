@@ -15,8 +15,8 @@ public class EnvironmentPropData : ScriptableObject
     [Tooltip("Maximum number of times to attempt spawning/moving an object before giving up.")]
     public int MaxIterations = 1000;
 
-    [Tooltip("Checks if the gameobject is colliding with non environment props.")]
-    public bool CheckForNonPropCollision = false;
+    //[Tooltip("Checks if the gameobject is colliding with non environment props.")]
+    //public bool CheckForNonPropCollision = false;
 
     public enum SpawnLocation
     {
@@ -26,11 +26,11 @@ public class EnvironmentPropData : ScriptableObject
         OnTopOfSurfaces, // Spawn on surfaces facing upwards such as ground, top of tables, beds, couches, etc...
         HangingDown, // Spawn on surfaces facing downwards such as the ceiling
         AgainstWall, // Spawn on the floor against the wall
-        WallPainting, // Spawn with the Y Axis always pointed up
+        //WallPainting, // Spawn with the Y Axis always pointed up
     }
 
     [Tooltip("Attach content to scene surfaces.")]
-    public SpawnLocation SpawnLocations = SpawnLocation.Floating;
+    public SpawnLocation SpawnLoc = SpawnLocation.Floating;
 
     [Tooltip("When using surface spawning, use this to filter which anchor labels should be included. Eg, spawn only on TABLE or OTHER.")]
     public MRUKAnchor.SceneLabels Labels = ~(MRUKAnchor.SceneLabels)0;

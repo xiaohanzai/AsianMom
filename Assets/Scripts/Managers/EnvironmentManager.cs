@@ -11,16 +11,20 @@ public class EnvironmentManager : MonoBehaviour
     private List<EnvironmentPropData> propDataList;
 
     private List<GameObject> spawnedObjects = new List<GameObject>();
-
-    // List to store potential spawn positions and their validity
-    private List<(Vector3 position, Quaternion rotation, Bounds bounds, bool isValid)> potentialSpawns = new List<(Vector3, Quaternion, Bounds, bool)>();
-
-    // Cache for prefab bounds
     private Dictionary<GameObject, Bounds?> prefabBoundsCache = new Dictionary<GameObject, Bounds?>();
 
-    // Start is called before the first frame update
     void Start()
     {
+#if UNITY_EDITOR
+        // for debugging
+        if (MRUK.Instance)
+        {
+            MRUK.Instance.RegisterSceneLoadedCallback(() =>
+            {
+                SpawnEnvironment();
+            });
+        }
+#endif
         pokeButtonEventChannel.OnEventRaised += OnPokeButtonEvent;
     }
 
@@ -37,7 +41,7 @@ public class EnvironmentManager : MonoBehaviour
                 SpawnEnvironment();
                 break;
             case PokeButtonType.ShuffleEnvironment:
-                ShuffleEnvironment();
+                SpawnEnvironment();
                 break;
             case PokeButtonType.ConfirmEnvironment:
                 break;
@@ -48,39 +52,46 @@ public class EnvironmentManager : MonoBehaviour
 
     private void SpawnEnvironment()
     {
-        foreach (var propData in propDataList)
-        {
-            SpawnObjects(propData);
-        }
+        //int n = 0;
+        //while (spawnedObjects.Count < propDataList.Count && n < 1) // TODO: I don't think this works properly
+        //{
+        ShuffleEnvironment();
+        //    Debug.Log(n);
+        //    n++;
+        //}
+        // TODO: protect mechanism for environment generation failure?
     }
 
     private void ShuffleEnvironment()
     {
         ClearEnvironment();
-        SpawnEnvironment();
+        foreach (var propData in propDataList)
+        {
+            SpawnObjects(propData);
+            Debug.Log(spawnedObjects.Count);
+        }
     }
 
     private void SpawnObjects(EnvironmentPropData propData)
     {
         var room = MRUK.Instance.GetCurrentRoom();
-        var prefabBounds = Utilities.GetPrefabBounds(propData.SpawnObject);
-        //var prefabBounds = GetPrefabBoundsFromBoxCollider(propData.SpawnObject);
+        //var prefabBounds = Utilities.GetPrefabBounds(propData.SpawnObject);
+        var prefabBounds = GetPrefabBoundsFromBoxCollider(propData.SpawnObject);
         Debug.Log($"{propData.SpawnObject.name} Prefab Bounds: {prefabBounds?.ToString() ?? "null"}");
 
         float minRadius = 0.0f;
         const float clearanceDistance = 0.01f;
         float baseOffset = -prefabBounds?.min.y ?? 0.0f;
         float centerOffset = prefabBounds?.center.y ?? 0.0f;
-        Bounds adjustedBounds = new Bounds();
+        Bounds adjustedBounds = new();
 
         if (prefabBounds.HasValue)
         {
-            minRadius = Mathf.Min(-prefabBounds.Value.min.x, -prefabBounds.Value.min.z, prefabBounds.Value.max.x, prefabBounds.Value.max.z);
+            minRadius = Mathf.Max(-prefabBounds.Value.min.x, -prefabBounds.Value.min.z, prefabBounds.Value.max.x, prefabBounds.Value.max.z);
             if (minRadius < 0f)
             {
                 minRadius = 0f;
             }
-
             var min = prefabBounds.Value.min;
             var max = prefabBounds.Value.max;
             min.y += clearanceDistance;
@@ -88,14 +99,14 @@ public class EnvironmentManager : MonoBehaviour
             {
                 max.y = min.y;
             }
-
             adjustedBounds.SetMinMax(min, max);
             if (propData.OverrideBounds > 0)
             {
                 Vector3 center = new Vector3(0f, clearanceDistance, 0f);
-                Vector3 size = new Vector3(propData.OverrideBounds * 2f, clearanceDistance * 2f, propData.OverrideBounds * 2f);
+                Vector3 size = new Vector3(propData.OverrideBounds * 2f, clearanceDistance * 2f, propData.OverrideBounds * 2f); // OverrideBounds represents the extents, not the size
                 adjustedBounds = new Bounds(center, size);
             }
+            Debug.Log(adjustedBounds.center.ToString() + "  " + adjustedBounds.extents.ToString());
         }
 
         for (int i = 0; i < propData.SpawnAmount; ++i)
@@ -104,7 +115,7 @@ public class EnvironmentManager : MonoBehaviour
             {
                 Vector3 spawnPosition = Vector3.zero;
                 Vector3 spawnNormal = Vector3.zero;
-                if (propData.SpawnLocations == EnvironmentPropData.SpawnLocation.Floating)
+                if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.Floating)
                 {
                     var randomPos = room.GenerateRandomPositionInRoom(minRadius, true);
                     if (!randomPos.HasValue)
@@ -117,7 +128,7 @@ public class EnvironmentManager : MonoBehaviour
                 else
                 {
                     MRUK.SurfaceType surfaceType = 0;
-                    switch (propData.SpawnLocations)
+                    switch (propData.SpawnLoc)
                     {
                         case EnvironmentPropData.SpawnLocation.AnySurface:
                             surfaceType |= MRUK.SurfaceType.FACING_UP;
@@ -127,7 +138,7 @@ public class EnvironmentManager : MonoBehaviour
                         case EnvironmentPropData.SpawnLocation.VerticalSurfaces:
                             surfaceType |= MRUK.SurfaceType.VERTICAL;
                             break;
-                        case EnvironmentPropData.SpawnLocation.WallPainting:
+                        case EnvironmentPropData.SpawnLocation.AgainstWall:
                             surfaceType |= MRUK.SurfaceType.VERTICAL;
                             break;
                         case EnvironmentPropData.SpawnLocation.OnTopOfSurfaces:
@@ -136,28 +147,24 @@ public class EnvironmentManager : MonoBehaviour
                         case EnvironmentPropData.SpawnLocation.HangingDown:
                             surfaceType |= MRUK.SurfaceType.FACING_DOWN;
                             break;
-                        case EnvironmentPropData.SpawnLocation.AgainstWall:
-                            surfaceType |= MRUK.SurfaceType.VERTICAL;
-                            break;
                     }
-
                     if (room.GenerateRandomPositionOnSurface(surfaceType, minRadius, LabelFilter.Included(propData.Labels), out var pos, out var normal))
                     {
                         spawnPosition = pos + normal * baseOffset;
                         spawnNormal = normal;
-
                         var center = spawnPosition + normal * centerOffset;
-
+                        // In some cases, surfaces may protrude through walls and end up outside the room
+                        // check to make sure the center of the prefab will spawn inside the room
                         if (!room.IsPositionInRoom(center))
                         {
                             continue;
                         }
-
+                        // Ensure the center of the prefab will not spawn inside a scene volume
                         if (room.IsPositionInSceneVolume(center))
                         {
                             continue;
                         }
-
+                        // Also make sure there is nothing close to the surface that would obstruct it
                         if (room.Raycast(new Ray(pos, normal), propData.SurfaceClearanceDistance, out _))
                         {
                             continue;
@@ -166,58 +173,43 @@ public class EnvironmentManager : MonoBehaviour
                 }
 
                 Quaternion spawnRotation = Quaternion.FromToRotation(Vector3.up, spawnNormal);
-
-                if (propData.SpawnLocations == EnvironmentPropData.SpawnLocation.WallPainting)
+                if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.AgainstWall) // TODO: I still don't know why this doesn't make physics.checkbox work
                 {
-                    spawnRotation = Quaternion.Euler(-90, spawnRotation.eulerAngles.y, SnapToNearest90Degrees(spawnRotation.eulerAngles.z));
+                    spawnPosition.y = 0f;
+                    spawnRotation = Quaternion.LookRotation(-spawnNormal);
                 }
-
-                bool isValidSpawn = true;
                 if (propData.CheckOverlaps && prefabBounds.HasValue)
                 {
-                    if (Physics.CheckBox(spawnPosition + spawnRotation * adjustedBounds.center, adjustedBounds.extents, spawnRotation, propData.LayerMask, QueryTriggerInteraction.UseGlobal))
+                    if (Physics.CheckBox(spawnPosition + spawnRotation * adjustedBounds.center, adjustedBounds.extents, spawnRotation, propData.LayerMask, QueryTriggerInteraction.Ignore))
                     {
-                        isValidSpawn = false;
+                        if (propData.name == "Bookshelf")
+                        {
+                            Debug.Log(spawnPosition + spawnRotation * adjustedBounds.center);
+                        }
+                        continue;
                     }
                 }
 
-                if (isValidSpawn && propData.CheckForNonPropCollision)
-                {
-                    var spawnedObject = Instantiate(propData.SpawnObject);
+                //if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.AgainstWall)
+                //{
+                //    spawnPosition.y = 0f;
+                //    spawnRotation = Quaternion.LookRotation(-spawnNormal);
+                //}
 
+                GameObject spawnedObject;
+                if (propData.SpawnObject.gameObject.scene.path == null)
+                {
+                    spawnedObject = Instantiate(propData.SpawnObject, spawnPosition, spawnRotation, transform);
+                }
+                else
+                {
+                    spawnedObject = propData.SpawnObject;
                     spawnedObject.transform.position = spawnPosition;
                     spawnedObject.transform.localRotation = spawnRotation;
-
-                    Destroy(spawnedObject);
+                    return; // ignore SpawnAmount once we have a successful move of existing object in the scene
                 }
-
-                potentialSpawns.Add((spawnPosition, spawnRotation, adjustedBounds, isValidSpawn));
-
-                if (isValidSpawn)
-                {
-                    GameObject spawnedObject;
-
-                    if (propData.SpawnLocations == EnvironmentPropData.SpawnLocation.AgainstWall)
-                    {
-                        spawnPosition.y = 0f; // Adjusting to place the object on the floor
-                        spawnRotation = Quaternion.LookRotation(-spawnNormal, Vector3.up);
-                    }
-
-                    if (propData.SpawnObject.gameObject.scene.path == null)
-                    {
-                        spawnedObject = Instantiate(propData.SpawnObject, spawnPosition, spawnRotation, transform);
-                    }
-                    else
-                    {
-                        spawnedObject = propData.SpawnObject;
-                        spawnedObject.transform.position = spawnPosition;
-                        spawnedObject.transform.localRotation = spawnRotation;
-                        return;
-                    }
-
-                    spawnedObjects.Add(spawnedObject);
-                    break;
-                }
+                spawnedObjects.Add(spawnedObject);
+                break;
             }
         }
     }
@@ -231,7 +223,6 @@ public class EnvironmentManager : MonoBehaviour
                 Destroy(obj);
             }
         }
-        potentialSpawns.Clear();
         spawnedObjects.Clear();
     }
 
@@ -255,7 +246,7 @@ public class EnvironmentManager : MonoBehaviour
         {
 
             // Log the properties of the BoxCollider
-            Debug.Log($"{transform.name} BoxCollider Center: {boxCollider.center}, Size: {boxCollider.size}, Bounds: {boxCollider.bounds}");
+            //Debug.Log($"{transform.name} BoxCollider Center: {boxCollider.center}, Size: {boxCollider.size}, Bounds: {boxCollider.bounds}");
 
             // Calculate the bounds using the BoxCollider size and center
             Vector3 worldCenter = transform.TransformPoint(boxCollider.center);
@@ -269,7 +260,7 @@ public class EnvironmentManager : MonoBehaviour
                 bounds.Encapsulate(corner);
             }
 
-            Debug.Log(transform.name + " Bounds " + bounds);
+            //Debug.Log(transform.name + " Bounds " + bounds);
             return bounds; // Return immediately after finding the first BoxCollider
         }
 

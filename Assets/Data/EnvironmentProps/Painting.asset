@@ -12,16 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbea64f9ff6949ceaaa38fcb984f9ae, type: 3}
   m_Name: Painting
   m_EditorClassIdentifier: 
-  SpawnObject: {fileID: 993454992057762671, guid: 4577597d5acfd4f8ab36ea239f661a13,
+  SpawnObject: {fileID: 3931353864877908178, guid: 3f1474403a3694e8dafbfa3738788156,
     type: 3}
   SpawnAmount: 1
   MaxIterations: 1000
-  CheckForNonPropCollision: 1
-  SpawnLocations: 5
-  Labels: 4
+  SpawnLoc: 5
+  Labels: -1
   CheckOverlaps: 1
   OverrideBounds: -1
   LayerMask:
     serializedVersion: 2
-    m_Bits: 65
-  SurfaceClearanceDistance: 0.5
+    m_Bits: 64
+  SurfaceClearanceDistance: 0.1
