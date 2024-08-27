@@ -115,6 +115,7 @@ public class EnvironmentManager : MonoBehaviour
             {
                 Vector3 spawnPosition = Vector3.zero;
                 Vector3 spawnNormal = Vector3.zero;
+                Vector3 checkCenter = Vector3.zero;
                 if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.Floating)
                 {
                     var randomPos = room.GenerateRandomPositionInRoom(minRadius, true);
@@ -152,6 +153,12 @@ public class EnvironmentManager : MonoBehaviour
                     {
                         spawnPosition = pos + normal * baseOffset;
                         spawnNormal = normal;
+                        checkCenter = spawnPosition;
+                        if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.AgainstWall)
+                        {
+                            checkCenter = pos - normal * adjustedBounds.center.z;
+                            checkCenter.y = 1f;
+                        }
                         var center = spawnPosition + normal * centerOffset;
                         // In some cases, surfaces may protrude through walls and end up outside the room
                         // check to make sure the center of the prefab will spawn inside the room
@@ -173,14 +180,16 @@ public class EnvironmentManager : MonoBehaviour
                 }
 
                 Quaternion spawnRotation = Quaternion.FromToRotation(Vector3.up, spawnNormal);
-                if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.AgainstWall) // TODO: I still don't know why this doesn't make physics.checkbox work
+                Vector3 checkExtext = adjustedBounds.extents;
+                if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.AgainstWall)
                 {
                     spawnPosition.y = 0f;
                     spawnRotation = Quaternion.LookRotation(-spawnNormal);
+                    checkExtext = new Vector3(adjustedBounds.extents.x, 0.5f, adjustedBounds.extents.z);
                 }
                 if (propData.CheckOverlaps && prefabBounds.HasValue)
                 {
-                    if (Physics.CheckBox(spawnPosition + spawnRotation * adjustedBounds.center, adjustedBounds.extents, spawnRotation, propData.LayerMask, QueryTriggerInteraction.Ignore))
+                    if (Physics.CheckBox(checkCenter, checkExtext, spawnRotation, propData.LayerMask, QueryTriggerInteraction.Ignore))
                     {
                         if (propData.name == "Bookshelf")
                         {
@@ -189,12 +198,6 @@ public class EnvironmentManager : MonoBehaviour
                         continue;
                     }
                 }
-
-                //if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.AgainstWall)
-                //{
-                //    spawnPosition.y = 0f;
-                //    spawnRotation = Quaternion.LookRotation(-spawnNormal);
-                //}
 
                 GameObject spawnedObject;
                 if (propData.SpawnObject.gameObject.scene.path == null)
