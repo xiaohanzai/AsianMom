@@ -5,7 +5,9 @@ using Meta.XR.MRUtilityKit;
 
 public class EnvironmentManager : MonoBehaviour
 {
+    [Header("Listening to")]
     [SerializeField] private PokeButtonEventChannelSO pokeButtonEventChannel;
+    [SerializeField] private SpawnObjectsEventChannelSO spawnObjectsEventChannel;
 
     [SerializeField, Tooltip("List of environment prop data objects to spawn upon start game.")]
     private List<EnvironmentPropData> propDataList;
@@ -15,27 +17,33 @@ public class EnvironmentManager : MonoBehaviour
 
     void Start()
     {
-#if UNITY_EDITOR
-        // for debugging
-        if (MRUK.Instance)
-        {
-            MRUK.Instance.RegisterSceneLoadedCallback(() =>
-            {
-                SpawnEnvironment();
-            });
-        }
-#endif
-        pokeButtonEventChannel.OnEventRaised += OnPokeButtonEvent;
+//#if UNITY_EDITOR
+//        // for debugging
+//        if (MRUK.Instance)
+//        {
+//            MRUK.Instance.RegisterSceneLoadedCallback(() =>
+//            {
+//                SpawnEnvironment();
+//            });
+//        }
+//#endif
+        if(pokeButtonEventChannel != null)
+            pokeButtonEventChannel.OnEventRaised += OnPokeButtonEvent;
+        if (spawnObjectsEventChannel != null)
+            spawnObjectsEventChannel.OnEventRaised += SpawnObjects;
     }
 
     private void OnDestroy()
     {
-        pokeButtonEventChannel.OnEventRaised -= OnPokeButtonEvent;
+        if (pokeButtonEventChannel != null)
+            pokeButtonEventChannel.OnEventRaised -= OnPokeButtonEvent;
+        if (spawnObjectsEventChannel != null)
+            spawnObjectsEventChannel.OnEventRaised -= SpawnObjects;
     }
 
-    private void OnPokeButtonEvent(PokeButtonData data)
+    private void OnPokeButtonEvent(PokeButtonType data)
     {
-        switch (data.pokeButtonType)
+        switch (data)
         {
             case PokeButtonType.StartGame:
                 SpawnEnvironment();
@@ -50,7 +58,7 @@ public class EnvironmentManager : MonoBehaviour
         }
     }
 
-    private void SpawnEnvironment()
+    public void SpawnEnvironment()
     {
         //int n = 0;
         //while (spawnedObjects.Count < propDataList.Count && n < 1) // TODO: I don't think this works properly
@@ -62,17 +70,17 @@ public class EnvironmentManager : MonoBehaviour
         // TODO: protect mechanism for environment generation failure?
     }
 
-    private void ShuffleEnvironment()
+    public void ShuffleEnvironment()
     {
         ClearEnvironment();
         foreach (var propData in propDataList)
         {
-            SpawnObjects(propData);
+            spawnedObjects.AddRange(SpawnObjects(propData));
             Debug.Log(spawnedObjects.Count);
         }
     }
 
-    private void SpawnObjects(EnvironmentPropData propData)
+    private void GenerateNewSpawnLocs(EnvironmentPropData propData, out Vector3[] positions, out Quaternion[] rotations)
     {
         var room = MRUK.Instance.GetCurrentRoom();
         //var prefabBounds = Utilities.GetPrefabBounds(propData.SpawnObject);
@@ -84,6 +92,9 @@ public class EnvironmentManager : MonoBehaviour
         float baseOffset = -prefabBounds?.min.y ?? 0.0f;
         float centerOffset = prefabBounds?.center.y ?? 0.0f;
         Bounds adjustedBounds = new();
+
+        positions = new Vector3[propData.SpawnAmount];
+        rotations = new Quaternion[propData.SpawnAmount];
 
         if (prefabBounds.HasValue)
         {
@@ -111,6 +122,9 @@ public class EnvironmentManager : MonoBehaviour
 
         for (int i = 0; i < propData.SpawnAmount; ++i)
         {
+            positions[i] = Vector3.one * 1000;
+            rotations[i] = Quaternion.identity;
+
             for (int j = 0; j < propData.MaxIterations; ++j)
             {
                 Vector3 spawnPosition = Vector3.zero;
@@ -153,13 +167,13 @@ public class EnvironmentManager : MonoBehaviour
                     {
                         spawnPosition = pos + normal * baseOffset;
                         spawnNormal = normal;
-                        checkCenter = spawnPosition;
+                        var center = spawnPosition + normal * centerOffset;
+                        checkCenter = center;
                         if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.AgainstWall)
                         {
                             checkCenter = pos - normal * adjustedBounds.center.z;
                             checkCenter.y = 1f;
                         }
-                        var center = spawnPosition + normal * centerOffset;
                         // In some cases, surfaces may protrude through walls and end up outside the room
                         // check to make sure the center of the prefab will spawn inside the room
                         if (!room.IsPositionInRoom(center))
@@ -180,16 +194,16 @@ public class EnvironmentManager : MonoBehaviour
                 }
 
                 Quaternion spawnRotation = Quaternion.FromToRotation(Vector3.up, spawnNormal);
-                Vector3 checkExtext = adjustedBounds.extents;
+                Vector3 checkExtent = adjustedBounds.extents;
                 if (propData.SpawnLoc == EnvironmentPropData.SpawnLocation.AgainstWall)
                 {
                     spawnPosition.y = 0f;
                     spawnRotation = Quaternion.LookRotation(-spawnNormal);
-                    checkExtext = new Vector3(adjustedBounds.extents.x, 0.5f, adjustedBounds.extents.z);
+                    checkExtent = new Vector3(adjustedBounds.extents.x, 0.5f, adjustedBounds.extents.z);
                 }
                 if (propData.CheckOverlaps && prefabBounds.HasValue)
                 {
-                    if (Physics.CheckBox(checkCenter, checkExtext, spawnRotation, propData.LayerMask, QueryTriggerInteraction.Ignore))
+                    if (Physics.CheckBox(checkCenter, checkExtent, spawnRotation, propData.LayerMask, QueryTriggerInteraction.Ignore))
                     {
                         if (propData.name == "Bookshelf")
                         {
@@ -199,26 +213,71 @@ public class EnvironmentManager : MonoBehaviour
                     }
                 }
 
-                GameObject spawnedObject;
-                if (propData.SpawnObject.gameObject.scene.path == null)
-                {
-                    spawnedObject = Instantiate(propData.SpawnObject, spawnPosition, spawnRotation, transform);
-                }
-                else
-                {
-                    spawnedObject = propData.SpawnObject;
-                    spawnedObject.transform.position = spawnPosition;
-                    spawnedObject.transform.localRotation = spawnRotation;
-                    return; // ignore SpawnAmount once we have a successful move of existing object in the scene
-                }
-                spawnedObjects.Add(spawnedObject);
+                positions[i] = spawnPosition;
+                rotations[i] = spawnRotation;
                 break;
             }
         }
     }
 
+    private void SpawnObjects(SpawnData spawnData)
+    {
+        if (spawnObjectsEventChannel.GetNumberOfSpawnedObjects(spawnData.spawnType) < spawnData.environmentPropData.SpawnAmount)
+        {
+            List<GameObject> objects = SpawnObjects(spawnData.environmentPropData);
+            spawnObjectsEventChannel.AddToSpawnedObjectsDict(spawnData.spawnType, objects);
+            Debug.Log(objects.Count);
+        }
+        else
+        {
+            GenerateNewSpawnLocs(spawnData.environmentPropData, out Vector3[] positions, out Quaternion[] rotations);
+            List<GameObject> objects = spawnObjectsEventChannel.GetSpawnedObjects(spawnData.spawnType);
+            for (int i = 0; i < objects.Count; i++)
+            {
+                objects[i].transform.position = positions[i];
+                objects[i].transform.rotation = rotations[i];
+            }
+        }
+    }
+
+    private List<GameObject> SpawnObjects(EnvironmentPropData propData)
+    {
+        List<GameObject> objects = new List<GameObject>();
+
+        GenerateNewSpawnLocs(propData, out Vector3[] positions, out Quaternion[] rotations);
+        Debug.Log(positions.Length);
+
+        for (int i = 0; i < propData.SpawnAmount; ++i)
+        {
+            //if (float.IsInfinity(positions[i].x))
+            //{
+            //    continue;
+            //}
+
+            GameObject spawnedObject;
+            if (propData.SpawnObject.gameObject.scene.path == null)
+            {
+                spawnedObject = Instantiate(propData.SpawnObject, positions[i], rotations[i], transform);
+                Debug.Log("hello");
+            }
+            else
+            {
+                // TODO: I'm not sure what these lines do exactly
+                spawnedObject = propData.SpawnObject;
+                spawnedObject.transform.position = positions[i];
+                spawnedObject.transform.localRotation = rotations[i];
+                Debug.Log("world");
+                return objects; // ignore SpawnAmount once we have a successful move of existing object in the scene
+            }
+            objects.Add(spawnedObject);
+        }
+
+        return objects;
+    }
+
     private void ClearEnvironment()
     {
+        Debug.Log(spawnedObjects.Count);
         foreach (var obj in spawnedObjects)
         {
             if (obj != null)

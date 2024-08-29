@@ -4,16 +4,13 @@ using UnityEngine;
 
 public class PokeButtonEventHandler : MonoBehaviour
 {
-    [SerializeField] private PokeButtonEventChannelSO _pokeButtonEventChannel;
-    [SerializeField] private PokeButtonType _pokeButtonType;
+    [SerializeField] private PokeButtonType pokeButtonType;
+
+    [Header("Broadcasting on")]
+    [SerializeField] private PokeButtonEventChannelSO pokeButtonEventChannel;
 
     public void RaiseEvent()
     {
-        PokeButtonData pokeButtonData = new PokeButtonData
-        {
-            pokeButtonType = _pokeButtonType,
-        };
-
-        _pokeButtonEventChannel.RaiseEvent(pokeButtonData);
+        pokeButtonEventChannel.RaiseEvent(pokeButtonType);
     }
 }

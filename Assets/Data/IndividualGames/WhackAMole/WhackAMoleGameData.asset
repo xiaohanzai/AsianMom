@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9264c448a1c8647eb87a493d941bdc50, type: 3}
+  m_Name: WhackAMoleGameData
+  m_EditorClassIdentifier: 
+  gameName: 1
+  gamePrefab: {fileID: 3721480450690566269, guid: fad91cc6106574ffaa8b31bd3589931f,
+    type: 3}
+  buttonText: Play Whack A Mole
+  instructionText: Play Whack A Mole in your room
