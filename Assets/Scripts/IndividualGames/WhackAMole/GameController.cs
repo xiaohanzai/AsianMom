@@ -31,6 +31,8 @@ namespace WhackAMole
 
         public void PrepGame()
         {
+            gameCompleted = false;
+
             // spawn moles
             SpawnData spawnData = new SpawnData
             {

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8078c5b0c55ab42ff97eea798233d6ea, type: 3}
-  m_Name: Level1Data
+  m_Script: {fileID: 11500000, guid: a8e02dcc993e642f5973217b469e6885, type: 3}
+  m_Name: MusicData2
   m_EditorClassIdentifier: 
-  gameDataList:
-  - {fileID: 11400000, guid: 1ac49b622cf4d4cf1b1a7a904d5bcad0, type: 2}
-  - {fileID: 11400000, guid: d8bee8e2497374e35830e7e229ff3800, type: 2}
+  musicName: 1
+  sequence: 
+  audioClip: {fileID: 0}

@@ -9,6 +9,7 @@ public class DebugButtonEventHandler : MonoBehaviour
         ShuffleEnvironment,
         NewLevel,
         PlayWhackAMole,
+        PlayMusicGame,
     }
     [SerializeField] private DebugButtonType buttonType;
 
@@ -28,6 +29,17 @@ public class DebugButtonEventHandler : MonoBehaviour
             foreach (var handler in tabletButtonEventHandlers)
             {
                 if (handler.GetCurrentGameName() == IndividualGameName.WhackAMole)
+                {
+                    handler.StartGame(true);
+                }
+            }
+        }
+        else if (buttonType == DebugButtonType.PlayMusicGame)
+        {
+            TabletButtonEventHandler[] tabletButtonEventHandlers = FindObjectsOfType<TabletButtonEventHandler>();
+            foreach (var handler in tabletButtonEventHandlers)
+            {
+                if (handler.GetCurrentGameName() == IndividualGameName.Music)
                 {
                     handler.StartGame(true);
                 }
