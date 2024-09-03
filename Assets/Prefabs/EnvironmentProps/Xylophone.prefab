@@ -489,15 +489,17 @@ MonoBehaviour:
   - {fileID: 4413309767468691040}
   - {fileID: 3673430067198531710}
   - {fileID: 6036193685879662330}
+  drumstick: {fileID: 1319943832427514943}
   musicText: {fileID: 5380507365898368048}
   musicAudio: {fileID: 8301851141482985711}
-  successAudio: {fileID: 7564139815130193561}
   wrongAudio: {fileID: 3244407876288329125}
   gameCompleteEventChannel: {fileID: 11400000, guid: b2ac92ccc069a4f4d9cb6db9d4ca4426,
     type: 2}
   setMusicEventChannel: {fileID: 11400000, guid: 14d64a82be3484c74bf39ddd6653a450,
     type: 2}
   gameStartEventChannel: {fileID: 11400000, guid: 2256128526c8a445f9e6a9f5e718a719,
+    type: 2}
+  levelCompleteEventChannel: {fileID: 11400000, guid: cc996eaae2c1040c4a5728dfdd8e4486,
     type: 2}
 --- !u!1 &2564226236227803974
 GameObject:

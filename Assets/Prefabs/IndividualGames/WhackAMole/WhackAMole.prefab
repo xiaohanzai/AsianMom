@@ -89,6 +89,8 @@ MonoBehaviour:
     type: 2}
   levelStartEventChannel: {fileID: 11400000, guid: 925decd1326f840e486c65833a6398b3,
     type: 2}
+  levelCompleteEventChannel: {fileID: 11400000, guid: cc996eaae2c1040c4a5728dfdd8e4486,
+    type: 2}
 --- !u!1001 &8244057721061714125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -146,6 +148,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2456810674908991184, guid: af0cf7d916f48456fbaea7413ceb143a,
+        type: 3}
+      propertyPath: m_TranslationOffset.z
+      value: -0.00052160025
       objectReference: {fileID: 0}
     - target: {fileID: 5149582804248611444, guid: af0cf7d916f48456fbaea7413ceb143a,
         type: 3}

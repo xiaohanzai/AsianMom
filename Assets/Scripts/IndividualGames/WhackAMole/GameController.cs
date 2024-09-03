@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Meta.XR.MRUtilityKit;
 using UnityEngine;
 
@@ -21,8 +22,10 @@ namespace WhackAMole
         [Header("Listening to")]
         [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
         [SerializeField] private VoidEventChannelSO levelStartEventChannel;
+        [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
 
         private List<Mole> moles = new List<Mole>();
+        private List<Mole> aliveMoles = new List<Mole>();
 
         private bool gameStarted;
         private bool gameCompleted;
@@ -32,6 +35,7 @@ namespace WhackAMole
         public void PrepGame()
         {
             gameCompleted = false;
+            gameStarted = false;
 
             // spawn moles
             SpawnData spawnData = new SpawnData
@@ -42,10 +46,6 @@ namespace WhackAMole
             spawnObjectsEventChannel.RaiseEvent(spawnData);
 
             // set up params
-            foreach (var mole in moles)
-            {
-                mole.Evt_OnMoleDied.RemoveListener(RemoveDeadMole);
-            }
             moles.Clear();
             foreach (var moleObject in spawnObjectsEventChannel.GetSpawnedObjects(SpawnType.Mole))
             {
@@ -59,7 +59,7 @@ namespace WhackAMole
                 mole.SetAlive();
                 mole.Evt_OnMoleDied.AddListener(RemoveDeadMole);
                 moles.Add(mole);
-                mole.gameObject.SetActive(true);
+                mole.gameObject.SetActive(false);
             }
 
             // hide hammer
@@ -68,9 +68,9 @@ namespace WhackAMole
 
         private void RemoveDeadMole(Mole mole)
         {
-            moles.Remove(mole);
-
-            if (moles.Count == 0)
+            aliveMoles.Remove(mole);
+            
+            if (aliveMoles.Count == 0)
             {
                 CompleteGame();
             }
@@ -98,6 +98,11 @@ namespace WhackAMole
             foreach (var mole in moles)
             {
                 mole.gameObject.SetActive(true);
+                mole.SetAlive();
+                if (!aliveMoles.Contains(mole))
+                {
+                    aliveMoles.Add(mole);
+                }
             }
             hammer.gameObject.SetActive(true);
         }
@@ -105,17 +110,33 @@ namespace WhackAMole
         private void EndGame()
         {
             gameStarted = false;
-
+            hammer.gameObject.SetActive(false);
             foreach (var mole in moles)
             {
                 mole.MoveUnderground();
+                mole.gameObject.SetActive(false);
             }
         }
 
         private void CompleteGame()
         {
             gameCompleted = true;
+            hammer.gameObject.SetActive(false);
+            foreach (var mole in moles)
+            {
+                mole.Evt_OnMoleDied.RemoveListener(RemoveDeadMole);
+            }
             gameCompleteEventChannel.RaiseEvent(IndividualGameName.WhackAMole);
+        }
+
+        private void OnLevelComplete()
+        {
+            foreach (var item in moles)
+            {
+                Destroy(item.gameObject);
+            }
+            moles.Clear();
+            aliveMoles.Clear();
         }
 
         private void Awake()
@@ -127,6 +148,7 @@ namespace WhackAMole
         void Start()
         {
             gameStartEventChannel.OnEventRaised += StartGame;
+            levelCompleteEventChannel.OnEventRaised += OnLevelComplete;
 
             totalTime = 2 * moveTime + waitTime + 0.5f;
         }
@@ -135,6 +157,7 @@ namespace WhackAMole
         {
             gameStartEventChannel.OnEventRaised -= StartGame;
             levelStartEventChannel.OnEventRaised -= PrepGame;
+            levelCompleteEventChannel.OnEventRaised -= OnLevelComplete;
 
             foreach (var mole in moles)
             {
@@ -157,8 +180,8 @@ namespace WhackAMole
             else
             {
                 timer = 0;
-                int ind = Random.Range(0, moles.Count);
-                moles[ind].StartPopingUp();
+                int ind = Random.Range(0, aliveMoles.Count);
+                aliveMoles[ind].StartPopingUp();
             }
         }
     }

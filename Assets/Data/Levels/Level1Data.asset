@@ -15,3 +15,4 @@ MonoBehaviour:
   gameDataList:
   - {fileID: 11400000, guid: 1ac49b622cf4d4cf1b1a7a904d5bcad0, type: 2}
   - {fileID: 11400000, guid: d8bee8e2497374e35830e7e229ff3800, type: 2}
+  - {fileID: 11400000, guid: 61d46dfc4df1e46dda595e3d31468f17, type: 2}

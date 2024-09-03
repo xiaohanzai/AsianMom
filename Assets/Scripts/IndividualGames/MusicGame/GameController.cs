@@ -9,12 +9,11 @@ namespace MusicGame
     public class GameController : MonoBehaviour
     {
         [SerializeField] private MusicKey[] musicKeys;
-
+        [SerializeField] private Drumstick drumstick;
         [SerializeField] private TextMeshProUGUI musicText;
 
         [Header("Audios")]
         [SerializeField] private AudioSource musicAudio;
-        [SerializeField] private AudioSource successAudio;
         [SerializeField] private AudioSource wrongAudio;
 
         [Header("Broadcasting on")]
@@ -23,6 +22,7 @@ namespace MusicGame
         [Header("Listening to")]
         [SerializeField] private SetMusicEventChannelSO setMusicEventChannel;
         [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
+        [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
 
         private List<MusicKeyName> correctSequence = new List<MusicKeyName>();
         private int ind;
@@ -34,6 +34,7 @@ namespace MusicGame
         {
             setMusicEventChannel.OnEventRaised += PrepGame;
             gameStartEventChannel.OnEventRaised += StartGame;
+            levelCompleteEventChannel.OnEventRaised += OnLevelComplete;
 
             foreach (var key in musicKeys)
             {
@@ -45,6 +46,7 @@ namespace MusicGame
         {
             setMusicEventChannel.OnEventRaised -= PrepGame;
             gameStartEventChannel.OnEventRaised -= StartGame;
+            levelCompleteEventChannel.OnEventRaised -= OnLevelComplete;
 
             foreach (var key in musicKeys)
             {
@@ -55,9 +57,11 @@ namespace MusicGame
         private void PrepGame(MusicData data)
         {
             gameCompleted = false;
+            gameStarted = false;
 
             correctSequence = data.sequence;
             musicAudio.clip = data.audioClip;
+            drumstick.gameObject.SetActive(false);
             SetText();
         }
 
@@ -81,17 +85,21 @@ namespace MusicGame
 
             musicAudio.Play();
             gameStarted = true;
+            drumstick.gameObject.SetActive(true);
+            ind = 0; // always a fresh start; no memory of previous play
         }
 
         private void EndGame()
         {
             gameStarted = false;
+            musicAudio.Stop();
+            drumstick.gameObject.SetActive(false);
         }
 
         private void CompleteGame()
         {
             gameCompleted = true;
-            successAudio.Play();
+            drumstick.gameObject.SetActive(false);
             gameCompleteEventChannel.RaiseEvent(IndividualGameName.Music);
         }
 
@@ -126,6 +134,13 @@ namespace MusicGame
                 text += item.ToString() + " ";
             }
             musicText.text = text;
+        }
+
+        private void OnLevelComplete()
+        {
+            musicText.text = "";
+            correctSequence.Clear();
+            musicAudio.clip = null;
         }
     }
 }

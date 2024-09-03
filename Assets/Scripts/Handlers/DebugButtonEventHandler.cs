@@ -8,8 +8,10 @@ public class DebugButtonEventHandler : MonoBehaviour
     {
         ShuffleEnvironment,
         NewLevel,
+        LevelComplete,
         PlayWhackAMole,
         PlayMusicGame,
+        PlayPaintingGame,
     }
     [SerializeField] private DebugButtonType buttonType;
 
@@ -44,6 +46,21 @@ public class DebugButtonEventHandler : MonoBehaviour
                     handler.StartGame(true);
                 }
             }
+        }
+        else if (buttonType == DebugButtonType.PlayPaintingGame)
+        {
+            TabletButtonEventHandler[] tabletButtonEventHandlers = FindObjectsOfType<TabletButtonEventHandler>();
+            foreach (var handler in tabletButtonEventHandlers)
+            {
+                if (handler.GetCurrentGameName() == IndividualGameName.Painting)
+                {
+                    handler.StartGame(true);
+                }
+            }
+        }
+        else if (buttonType == DebugButtonType.LevelComplete)
+        {
+            FindObjectOfType<LevelManager>().ClearLevel();
         }
     }
 }

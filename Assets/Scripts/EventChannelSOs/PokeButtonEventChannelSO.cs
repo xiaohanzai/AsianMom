@@ -41,5 +41,6 @@ public enum PokeButtonType
     ShuffleEnvironment,
     ConfirmEnvironment,
     NewLevel,
+    LevelComplete,
     PlayWhackAMole, // for debugging
 }
