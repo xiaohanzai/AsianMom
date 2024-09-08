@@ -151,6 +151,7 @@ MonoBehaviour:
   originalImage: {fileID: 7037151433680950348}
   paintingTransform: {fileID: 8902566600577823598}
   paintBrush: {fileID: 9791397718294809}
+  paintBrushLoc: {fileID: 6992046280228251541}
   gameCompleteEventChannel: {fileID: 11400000, guid: b2ac92ccc069a4f4d9cb6db9d4ca4426,
     type: 2}
   setPaintingEventChannel: {fileID: 11400000, guid: da26a607c66794e12937e3a2ac6a0a12,
@@ -535,9 +536,41 @@ Transform:
   - {fileID: 5357077610300852932}
   - {fileID: 6101450972981124410}
   - {fileID: 7186064996102333792}
+  - {fileID: 6992046280228251541}
   - {fileID: 5005772226729594596}
   - {fileID: 8902566600577823598}
   m_Father: {fileID: 2963219897743057873}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6530489052595168718
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6992046280228251541}
+  m_Layer: 6
+  m_Name: PaintbrushLoc
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6992046280228251541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6530489052595168718}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -0.88900006, z: -0.896}
+  m_LocalScale: {x: 0.032098997, y: 0.072032005, z: 0.014288595}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 879755517296539655}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7492043634390674433
 GameObject:

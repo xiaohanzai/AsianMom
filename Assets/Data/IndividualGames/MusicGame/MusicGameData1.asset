@@ -16,4 +16,5 @@ MonoBehaviour:
   gamePrefab: {fileID: 6027945014328436510, guid: 3f1574acbedfa4b92b2a9192cee9f0cf,
     type: 3}
   buttonText: Play Xylophone
-  instructionText: Play Xylophone
+  instructionText: Play the twinkle twinkle little star sequence shown above the
+    xylophone

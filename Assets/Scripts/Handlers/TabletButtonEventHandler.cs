@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Mom;
 
 public class TabletButtonEventHandler : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI textMeshPro;
+    [SerializeField] private TextMeshProUGUI buttonTMP;
     [SerializeField] private Toggle toggle;
+
+    private string instructionText;
 
     [Header("Broadcasting on")]
     [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
+    [SerializeField] private TextEventChannelSO setInstructionTextEventChannel;
 
     private IndividualGameName gameName;
 
@@ -24,6 +28,7 @@ public class TabletButtonEventHandler : MonoBehaviour
         if (start)
         {
             gameStartEventChannel.RaiseEvent(gameName);
+            setInstructionTextEventChannel.RaiseEvent(instructionText);
         }
         else
         {
@@ -33,10 +38,15 @@ public class TabletButtonEventHandler : MonoBehaviour
 
     public void ResetButton()
     {
-        textMeshPro.text = "";
+        buttonTMP.text = "";
         toggle.enabled = true;
         toggle.isOn = false;
         gameName = IndividualGameName.Null;
+    }
+
+    public bool CheckIfToggleOn()
+    {
+        return toggle.isOn;
     }
 
     public void SetToggleOff()
@@ -49,15 +59,25 @@ public class TabletButtonEventHandler : MonoBehaviour
         toggle.isOn = true;
     }
 
-    public void SetText(string txt)
+    public void SetButtonText(string txt)
     {
-        textMeshPro.text = txt;
+        buttonTMP.text = txt;
+    }
+
+    public void SetInstructionText(string txt)
+    {
+        instructionText = txt;
     }
 
     public void SetDisabled()
     {
         toggle.isOn = false; // TODO: this did not work?
         toggle.enabled = false;
+    }
+
+    public void SetEnabled()
+    {
+        toggle.enabled = true;
     }
 
     public void LinkToGame(IndividualGameName name)

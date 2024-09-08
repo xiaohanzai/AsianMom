@@ -4,85 +4,75 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] private List<LevelData> levelDatas;
-    [SerializeField] private List<TabletButtonEventHandler> availableButtons;
+    [SerializeField] private List<LevelData> levelDatas; // levelDatas[i] is the LevelData for level i+1
+    [SerializeField] private List<TabletButtonEventHandler> availableButtons; // tablet buttons
 
-    [SerializeField] private Transform propInstantiationLoc;
+    [SerializeField] private Transform propInstantiationLoc; // where do you want new props e.g. hammer to appear
 
-    [SerializeField] private AudioSource successAudio;
+    [Header("Audios")]
+    [SerializeField] private AudioSource successAudio; // when an individual game is complete play success audio
+    [SerializeField] private AudioSource failedAudio; // when discovered by mom play failed audio
 
-    private int level = 0;
+    private int level = 1;
+    private int nGame;
+    private bool isLevelComplete;
 
     [Header("Listening to")]
     [SerializeField] private PokeButtonEventChannelSO pokeButtonEventChannel;
     [SerializeField] private IndividualGameEventChannelSO gameCompleteEventChannel;
+    [SerializeField] private VoidEventChannelSO checkIndividualGamesEventChannel;
 
     [Header("Broadcasting on")]
+    [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
     [SerializeField] private VoidEventChannelSO levelStartEventChannel;
+    [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
     [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
-    [SerializeField] private TransformEventChannelSO transformEventChannel;
+    [SerializeField] private TransformEventChannelSO setPropLocEventChannel;
+    [SerializeField] private FloatEventChannelSO setTimeIntervalEventChannel;
+    [SerializeField] private FloatEventChannelSO setWaitTimeEventChannel;
+    [SerializeField] private TextEventChannelSO setInstructionTextEventChannel;
 
     private class InternalGameData
     {
         public GameObject go;
         public TabletButtonEventHandler button;
-        public string buttonText;
-        public string instructionText;
         public bool isCompleted;
     }
     private Dictionary<IndividualGameName, InternalGameData> gameNameDataPairs = new Dictionary<IndividualGameName, InternalGameData>();
 
-    // Start is called before the first frame update
     void Start()
     {
         pokeButtonEventChannel.OnEventRaised += LoadNewLevelData;
-        pokeButtonEventChannel.OnEventRaised += ClearLevel;
+        pokeButtonEventChannel.OnEventRaised += StartLevel;
         gameCompleteEventChannel.OnEventRaised += DisableGameButton;
         gameCompleteEventChannel.OnEventRaised += DisableGame;
         gameCompleteEventChannel.OnEventRaised += PlaySuccessAudio;
+        checkIndividualGamesEventChannel.OnEventRaised += CheckIfAnyGameIsOn;
     }
 
     private void OnDestroy()
     {
         pokeButtonEventChannel.OnEventRaised -= LoadNewLevelData;
-        pokeButtonEventChannel.OnEventRaised -= ClearLevel;
+        pokeButtonEventChannel.OnEventRaised -= StartLevel;
         gameCompleteEventChannel.OnEventRaised -= DisableGameButton;
         gameCompleteEventChannel.OnEventRaised -= DisableGame;
         gameCompleteEventChannel.OnEventRaised -= PlaySuccessAudio;
+        checkIndividualGamesEventChannel.OnEventRaised -= CheckIfAnyGameIsOn;
     }
 
-    private void LoadNewLevelData(PokeButtonType data)
+    private void LoadNewLevelData(PokeButtonType type)
     {
-        if (data != PokeButtonType.NewLevel)
+        if (type != PokeButtonType.LoadLevel)
         {
             return;
         }
         LoadNewLevelData();
     }
 
-    private void ClearLevel(PokeButtonType type)
-    {
-        if (type != PokeButtonType.LevelComplete)
-        {
-            return;
-        }
-        ClearLevel();
-    }
-
     public void ClearLevel()
     {
-        int sum = 0;
-        foreach (var item in gameNameDataPairs.Keys)
-        {
-            if (gameNameDataPairs[item].isCompleted)
-            {
-                sum += 1;
-            }
-        }
-        if (sum < gameNameDataPairs.Count)
-        {
-            return;
-        }
+        // clear data and reset tablet buttons if level complete
+        isLevelComplete = true;
         levelCompleteEventChannel.RaiseEvent();
         ClearSpawnedGames();
         foreach (var item in availableButtons)
@@ -94,42 +84,75 @@ public class LevelManager : MonoBehaviour
     public void LoadNewLevelData()
     {
         ClearSpawnedGames();
-        // TODO: for debugging
-        level = 1;
-        //level++;
-        //if (level > levelDatas.Count)
-        //{
-        //    return;
-        //}
+
+        // this function is used when restarting a level as well; so check if level complete first
+        if (isLevelComplete)
+        {
+            isLevelComplete = false;
+            level++;
+            if (level > levelDatas.Count)
+            {
+                return;
+            }
+        }
+
+        // set time intervals
+        setTimeIntervalEventChannel.RaiseEvent(levelDatas[level - 1].timeInterval);
+        setWaitTimeEventChannel.RaiseEvent(levelDatas[level - 1].waitTime);
 
         // instantiate prefabs
         List<IndividualGameData> gameDataList = levelDatas[level - 1].GetGameDataList();
-        for (int i = 0; i < gameDataList.Count; i++)
+        nGame = gameDataList.Count;
+        for (int i = 0; i < nGame; i++)
         {
             gameDataList[i].GetAllFields(out IndividualGameName name, out GameObject prefab, out string btnText, out string instrText);
             InternalGameData d = new InternalGameData
             {
                 go = Instantiate(prefab),
                 button = availableButtons[i],
-                buttonText = btnText,
-                instructionText = instrText,
                 isCompleted = false,
             };
+            // link to tablet buttons
             availableButtons[i].gameObject.SetActive(true);
             availableButtons[i].ResetButton();
-            availableButtons[i].SetText(btnText);
+            availableButtons[i].SetButtonText(btnText);
+            availableButtons[i].SetInstructionText(instrText);
             availableButtons[i].LinkToGame(name);
+            // add to dict
             gameNameDataPairs.Add(name, d);
         }
-        availableButtons[gameDataList.Count].SetToggleOn();
-        availableButtons[gameDataList.Count].SetText("Cancel");
-        availableButtons[gameDataList.Count].gameObject.SetActive(true);
-        for (int i = gameDataList.Count + 1; i < availableButtons.Count; i++)
+        // set the cancel button
+        availableButtons[nGame].SetToggleOn();
+        availableButtons[nGame].SetButtonText("Stop Playing");
+        availableButtons[nGame].SetInstructionText("Now pretend you are studying!");
+        availableButtons[nGame].gameObject.SetActive(true);
+        // rest of the buttons disabled
+        for (int i = nGame + 1; i < availableButtons.Count; i++)
         {
             availableButtons[i].gameObject.SetActive(false);
         }
+        // disable buttons before level start
+        for (int i = 0; i < nGame; i++)
+        {
+            availableButtons[i].SetDisabled();
+        }
+        // move instantiated prop to the desired location, set instructions text
+        setPropLocEventChannel.RaiseEvent(propInstantiationLoc);
+        setInstructionTextEventChannel.RaiseEvent(levelDatas[level - 1].instructionText);
+        levelLoadEventChannel.RaiseEvent();
+    }
+
+    private void StartLevel(PokeButtonType type)
+    {
+        if (type != PokeButtonType.StartLevel) return;
+
+        for (int i = 0; i < nGame; i++)
+        {
+            availableButtons[i].SetEnabled();
+        }
+        availableButtons[nGame].SetToggleOn();
+
         levelStartEventChannel.RaiseEvent();
-        transformEventChannel.RaiseEvent(propInstantiationLoc);
     }
 
     private void ClearSpawnedGames()
@@ -144,17 +167,49 @@ public class LevelManager : MonoBehaviour
 
     private void DisableGameButton(IndividualGameName data)
     {
+        // disable tablet button; called when an individual game is complete
         gameNameDataPairs[data].button.SetDisabled();
+        availableButtons[nGame].SetToggleOn();
     }
 
     private void DisableGame(IndividualGameName data)
     {
+        // disable the instantiated gameobjects of an individual game; called when an individual game is complete
         gameNameDataPairs[data].isCompleted = true;
         gameNameDataPairs[data].go.SetActive(false);
+
+        // check whether level is complete
+        int sum = 0;
+        foreach (var item in gameNameDataPairs.Keys)
+        {
+            if (gameNameDataPairs[item].isCompleted)
+            {
+                sum += 1;
+            }
+        }
+        if (sum == gameNameDataPairs.Count)
+        {
+            ClearLevel();
+        }
     }
 
     private void PlaySuccessAudio(IndividualGameName data)
     {
         successAudio.Play();
+    }
+
+    private void PlayFailedAudio()
+    {
+        failedAudio.Play();
+    }
+
+    private void CheckIfAnyGameIsOn()
+    {
+        // only need to check if the cancel button is toggled on
+        if (!availableButtons[nGame].CheckIfToggleOn())
+        {
+            Invoke("PlayFailedAudio", 1.5f);
+            levelFailedEventChannel.RaiseEvent();
+        }
     }
 }

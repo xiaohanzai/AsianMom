@@ -13,4 +13,9 @@ public class PokeButtonEventHandler : MonoBehaviour
     {
         pokeButtonEventChannel.RaiseEvent(pokeButtonType);
     }
+
+    public PokeButtonType GetButtonType()
+    {
+        return pokeButtonType;
+    }
 }

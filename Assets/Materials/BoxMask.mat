@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BoxMask
-  m_Shader: {fileID: 4800000, guid: 46f4b8c51d47f4af1aed16c859cc1a05, type: 3}
+  m_Shader: {fileID: 4800000, guid: 75edcb8be30424cb6bfac29b246342e1, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []

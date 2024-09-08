@@ -11,19 +11,19 @@ public class PokeButtonEventChannelSO : DescriptionSO
 
     public void RaiseEvent(PokeButtonType data)
     {
-        // for debugging
-        if (data == PokeButtonType.PlayWhackAMole)
-        {
-            TabletButtonEventHandler[] tabletButtonEventHandlers = FindObjectsOfType<TabletButtonEventHandler>();
-            foreach (var handler in tabletButtonEventHandlers)
-            {
-                if (handler.GetCurrentGameName() == IndividualGameName.WhackAMole)
-                {
-                    handler.StartGame(true);
-                }
-            }
-            return;
-        }
+        //// for debugging
+        //if (data == PokeButtonType.PlayWhackAMole)
+        //{
+        //    TabletButtonEventHandler[] tabletButtonEventHandlers = FindObjectsOfType<TabletButtonEventHandler>();
+        //    foreach (var handler in tabletButtonEventHandlers)
+        //    {
+        //        if (handler.GetCurrentGameName() == IndividualGameName.WhackAMole)
+        //        {
+        //            handler.StartGame(true);
+        //        }
+        //    }
+        //    return;
+        //}
 
         if (OnEventRaised != null)
             OnEventRaised.Invoke(data);
@@ -40,7 +40,6 @@ public enum PokeButtonType
     StartGame,
     ShuffleEnvironment,
     ConfirmEnvironment,
-    NewLevel,
-    LevelComplete,
-    PlayWhackAMole, // for debugging
+    LoadLevel,
+    StartLevel,
 }

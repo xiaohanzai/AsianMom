@@ -16,4 +16,5 @@ MonoBehaviour:
   gamePrefab: {fileID: 5552290725157908064, guid: d4a8dcb770d82440e9e346d9169533bd,
     type: 3}
   buttonText: Color A Painting
-  instructionText: Color A Painting
+  instructionText: Color the painting correctly according to the pattern shown on
+    top of it

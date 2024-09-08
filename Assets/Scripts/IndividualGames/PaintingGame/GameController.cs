@@ -11,6 +11,7 @@ namespace PaintingGame
         [SerializeField] private Image originalImage;
         [SerializeField] private Transform paintingTransform;
         [SerializeField] private PaintBrush paintBrush;
+        [SerializeField] private Transform paintBrushLoc;
 
         [Header("Broadcasting on")]
         [SerializeField] private IndividualGameEventChannelSO gameCompleteEventChannel;
@@ -45,17 +46,13 @@ namespace PaintingGame
             gameStarted = false;
             gameCompleted = false;
 
-            paintingPatternsParent = Instantiate(data.paintingPatternsParent, paintingTransform);
-            dict.Clear();
-            foreach (var item in paintingPatternsParent.GetAllPatterns())
+            if (paintingPatternsParent == null)
             {
-                dict.Add(item, false);
-                item.SetCanPaint(true);
-                item.Evt_OnPatternColored.AddListener(CheckPatternColor);
+                paintingPatternsParent = Instantiate(data.paintingPatternsParent, paintingTransform);
+                originalImage.sprite = data.image;
             }
-            paintingPatternsParent.gameObject.SetActive(false);
 
-            originalImage.sprite = data.image;
+            paintingPatternsParent.gameObject.SetActive(false);
             originalImage.gameObject.SetActive(false);
 
             paintBrush.gameObject.SetActive(false);
@@ -65,7 +62,7 @@ namespace PaintingGame
         {
             if (gameName != IndividualGameName.Painting)
             {
-                EndGame();
+                if (gameStarted) EndGame();
                 return;
             }
 
@@ -83,13 +80,21 @@ namespace PaintingGame
             paintingPatternsParent.gameObject.SetActive(true);
             originalImage.gameObject.SetActive(true);
 
-            Debug.Log(dict.Count);
-            foreach (var item in dict.Keys.ToList())
+            foreach (var item in paintingPatternsParent.GetAllPatterns())
             {
                 item.SetCanPaint(true);
                 item.ResetColor();
+                item.Evt_OnPatternColored.AddListener(CheckPatternColor);
             }
 
+            dict.Clear();
+            foreach (var item in paintingPatternsParent.GetAllPatterns())
+            {
+                dict.Add(item, false);
+            }
+
+            paintBrush.transform.position = paintBrushLoc.position;
+            paintBrush.transform.rotation = paintBrushLoc.rotation;
             paintBrush.gameObject.SetActive(true);
             paintBrush.ResetColor();
         }
@@ -99,15 +104,18 @@ namespace PaintingGame
             gameStarted = false;
             originalImage.gameObject.SetActive(false);
             paintBrush.gameObject.SetActive(false);
-            if (paintingPatternsParent != null)
-                paintingPatternsParent.gameObject.SetActive(false);
+            foreach (var item in paintingPatternsParent.GetAllPatterns())
+            {
+                item.Evt_OnPatternColored.RemoveListener(CheckPatternColor);
+            }
+            paintingPatternsParent.gameObject.SetActive(false);
         }
 
         private void CompleteGame()
         {
             gameCompleted = true;
             paintBrush.gameObject.SetActive(false);
-            foreach (var item in dict.Keys)
+            foreach (var item in paintingPatternsParent.GetAllPatterns())
             {
                 item.SetCanPaint(false);
                 item.Evt_OnPatternColored.RemoveListener(CheckPatternColor);

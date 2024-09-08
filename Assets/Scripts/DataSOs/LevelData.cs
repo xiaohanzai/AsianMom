@@ -7,6 +7,9 @@ using UnityEngine;
 public class LevelData : ScriptableObject
 {
     [SerializeField] private List<IndividualGameData> gameDataList;
+    public string instructionText;
+    public float timeInterval; // time interval to spawn mom
+    public float waitTime; // amount of time that mom spends in room
 
     public List<IndividualGameData> GetGameDataList()
     {

@@ -10,6 +10,7 @@ namespace MusicGame
     {
         [SerializeField] private MusicKey[] musicKeys;
         [SerializeField] private Drumstick drumstick;
+        [SerializeField] private Transform drumstickLoc;
         [SerializeField] private TextMeshProUGUI musicText;
 
         [Header("Audios")]
@@ -69,7 +70,7 @@ namespace MusicGame
         {
             if (gameName != IndividualGameName.Music)
             {
-                EndGame();
+                if (gameStarted) EndGame();
                 return;
             }
 
@@ -86,6 +87,8 @@ namespace MusicGame
             musicAudio.Play();
             gameStarted = true;
             drumstick.gameObject.SetActive(true);
+            drumstick.transform.position = drumstickLoc.transform.position;
+            drumstick.transform.rotation = drumstickLoc.transform.rotation;
             ind = 0; // always a fresh start; no memory of previous play
         }
 
@@ -128,7 +131,7 @@ namespace MusicGame
 
         private void SetText()
         {
-            string text = "";
+            string text = "Play sequence:\n";
             foreach (var item in correctSequence)
             {
                 text += item.ToString() + " ";

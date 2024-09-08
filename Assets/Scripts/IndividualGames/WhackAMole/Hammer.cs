@@ -6,23 +6,32 @@ namespace WhackAMole
 {
     public class Hammer : MonoBehaviour
     {
+        private Vector3 spawnPos;
+        private Quaternion spawnRot;
+
         [Header("Listening to")]
-        [SerializeField] private TransformEventChannelSO transformEventChannel;
+        [SerializeField] private TransformEventChannelSO setPropLocEventChannel;
 
         private void Awake()
         {
-            transformEventChannel.OnEventRaised += SetLocation;
+            setPropLocEventChannel.OnEventRaised += SetLocation;
         }
 
         private void OnDestroy()
         {
-            transformEventChannel.OnEventRaised -= SetLocation;
+            setPropLocEventChannel.OnEventRaised -= SetLocation;
         }
 
         private void SetLocation(Transform t)
         {
-            transform.position = t.position;
-            transform.rotation = t.rotation;
+            spawnPos = t.position;
+            spawnRot = t.rotation;
+        }
+
+        public void PutToSpawnLoc()
+        {
+            transform.position = spawnPos;
+            transform.rotation = spawnRot;
         }
     }
 }

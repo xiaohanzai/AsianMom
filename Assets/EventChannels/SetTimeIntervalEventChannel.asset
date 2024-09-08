@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a175e8629f84243eb8f283137bd19f06, type: 3}
-  m_Name: PropTransformEventChannel
+  m_Script: {fileID: 11500000, guid: d2e1cf443aa524072af9434c2fd12307, type: 3}
+  m_Name: SetTimeIntervalEventChannel
   m_EditorClassIdentifier: 
   m_Description: 

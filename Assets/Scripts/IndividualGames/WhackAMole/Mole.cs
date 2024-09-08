@@ -15,7 +15,7 @@ namespace WhackAMole
             MoveDown,
         }
 
-        [SerializeField] private float distFromGround;
+        [SerializeField] private float distFromGround; // positive number
         [SerializeField] private GameObject moleObject;
         [SerializeField] private MoleCollider moleCollider;
 
@@ -28,8 +28,8 @@ namespace WhackAMole
         private float waitTime;
         private float timer;
 
-        private Vector3 popPos;
-        private Vector3 originalPos;
+        private Vector3 popPos; // above ground position
+        private Vector3 originalPos; // underground position
 
         private bool isAlive;
 

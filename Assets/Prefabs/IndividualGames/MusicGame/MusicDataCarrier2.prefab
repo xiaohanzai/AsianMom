@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicData: {fileID: 11400000, guid: ed1ffb3219aa24dfd8ebcaf977fda101, type: 2}
-  levelStartEventChannel: {fileID: 11400000, guid: 925decd1326f840e486c65833a6398b3,
+  levelLoadEventChannel: {fileID: 11400000, guid: 1992b7052c9c94549a8403b93e68f5c6,
     type: 2}
   setMusicEventChannel: {fileID: 11400000, guid: 14d64a82be3484c74bf39ddd6653a450,
     type: 2}

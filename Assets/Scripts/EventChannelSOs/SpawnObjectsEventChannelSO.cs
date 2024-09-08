@@ -50,6 +50,14 @@ public class SpawnObjectsEventChannelSO : DescriptionSO
         }
     }
 
+    public void ClearAllSpawnedObjects()
+    {
+        foreach (var key in dictSpawnedObjects.Keys)
+        {
+            ClearSpawnedObjects(key);
+        }
+    }
+
     public void ClearSpawnedObjects(SpawnType spawnType)
     {
         foreach (var obj in dictSpawnedObjects[spawnType])

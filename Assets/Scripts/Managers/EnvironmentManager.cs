@@ -39,6 +39,8 @@ public class EnvironmentManager : MonoBehaviour
             pokeButtonEventChannel.OnEventRaised -= OnPokeButtonEvent;
         if (spawnObjectsEventChannel != null)
             spawnObjectsEventChannel.OnEventRaised -= SpawnObjects;
+
+        //spawnObjectsEventChannel.ClearAllSpawnedObjects();
     }
 
     private void OnPokeButtonEvent(PokeButtonType data)

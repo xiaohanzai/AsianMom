@@ -87,7 +87,7 @@ MonoBehaviour:
     type: 2}
   gameStartEventChannel: {fileID: 11400000, guid: 2256128526c8a445f9e6a9f5e718a719,
     type: 2}
-  levelStartEventChannel: {fileID: 11400000, guid: 925decd1326f840e486c65833a6398b3,
+  levelLoadEventChannel: {fileID: 11400000, guid: 1992b7052c9c94549a8403b93e68f5c6,
     type: 2}
   levelCompleteEventChannel: {fileID: 11400000, guid: cc996eaae2c1040c4a5728dfdd8e4486,
     type: 2}
@@ -154,6 +154,12 @@ PrefabInstance:
       propertyPath: m_TranslationOffset.z
       value: -0.00052160025
       objectReference: {fileID: 0}
+    - target: {fileID: 5101594210428802023, guid: af0cf7d916f48456fbaea7413ceb143a,
+        type: 3}
+      propertyPath: setPropLocEventChannel
+      value: 
+      objectReference: {fileID: 11400000, guid: a9d1a11595844464f93619933aae74b1,
+        type: 2}
     - target: {fileID: 5149582804248611444, guid: af0cf7d916f48456fbaea7413ceb143a,
         type: 3}
       propertyPath: m_Name

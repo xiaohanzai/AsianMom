@@ -6,61 +6,75 @@ public class DebugButtonEventHandler : MonoBehaviour
 {
     public enum DebugButtonType
     {
+        StartGame,
         ShuffleEnvironment,
-        NewLevel,
-        LevelComplete,
+        ConfirmEnvironment,
+        LoadLevel, // load current level if level not complete, otherwise load new level
+        StartLevel, // start playing this level
         PlayWhackAMole,
         PlayMusicGame,
         PlayPaintingGame,
+        Cancel,
     }
     [SerializeField] private DebugButtonType buttonType;
 
     public void RaiseEvent()
     {
-        if (buttonType == DebugButtonType.ShuffleEnvironment)
+        switch (buttonType)
         {
-            FindObjectOfType<EnvironmentManager>().SpawnEnvironment();
+            case DebugButtonType.StartGame:
+                FindAndCallPokeButton(PokeButtonType.StartGame);
+                break;
+            case DebugButtonType.ShuffleEnvironment:
+                FindAndCallPokeButton(PokeButtonType.ShuffleEnvironment);
+                break;
+            case DebugButtonType.ConfirmEnvironment:
+                FindAndCallPokeButton(PokeButtonType.ConfirmEnvironment);
+                break;
+            case DebugButtonType.LoadLevel:
+                FindAndCallPokeButton(PokeButtonType.LoadLevel);
+                break;
+            case DebugButtonType.StartLevel:
+                FindAndCallPokeButton(PokeButtonType.StartLevel);
+                break;
+            case DebugButtonType.PlayWhackAMole:
+                FindAndCallTabletButton(IndividualGameName.WhackAMole);
+                break;
+            case DebugButtonType.PlayMusicGame:
+                FindAndCallTabletButton(IndividualGameName.Music);
+                break;
+            case DebugButtonType.PlayPaintingGame:
+                FindAndCallTabletButton(IndividualGameName.Painting);
+                break;
+            case DebugButtonType.Cancel:
+                FindAndCallTabletButton(IndividualGameName.Null);
+                break;
+            default:
+                break;
         }
-        else if(buttonType == DebugButtonType.NewLevel)
+    }
+
+    private void FindAndCallPokeButton(PokeButtonType type)
+    {
+        PokeButtonEventHandler[] pokeButtonEventHandlers = FindObjectsOfType<PokeButtonEventHandler>();
+        foreach (var handler in pokeButtonEventHandlers)
         {
-            FindObjectOfType<LevelManager>().LoadNewLevelData();
-        }
-        else if (buttonType == DebugButtonType.PlayWhackAMole)
-        {
-            TabletButtonEventHandler[] tabletButtonEventHandlers = FindObjectsOfType<TabletButtonEventHandler>();
-            foreach (var handler in tabletButtonEventHandlers)
+            if (handler.GetButtonType() == type)
             {
-                if (handler.GetCurrentGameName() == IndividualGameName.WhackAMole)
-                {
-                    handler.StartGame(true);
-                }
+                handler.RaiseEvent();
             }
         }
-        else if (buttonType == DebugButtonType.PlayMusicGame)
+    }
+
+    private void FindAndCallTabletButton(IndividualGameName name)
+    {
+        TabletButtonEventHandler[] tabletButtonEventHandlers = FindObjectsOfType<TabletButtonEventHandler>();
+        foreach (var handler in tabletButtonEventHandlers)
         {
-            TabletButtonEventHandler[] tabletButtonEventHandlers = FindObjectsOfType<TabletButtonEventHandler>();
-            foreach (var handler in tabletButtonEventHandlers)
+            if (handler.GetCurrentGameName() == name)
             {
-                if (handler.GetCurrentGameName() == IndividualGameName.Music)
-                {
-                    handler.StartGame(true);
-                }
+                handler.StartGame(true);
             }
-        }
-        else if (buttonType == DebugButtonType.PlayPaintingGame)
-        {
-            TabletButtonEventHandler[] tabletButtonEventHandlers = FindObjectsOfType<TabletButtonEventHandler>();
-            foreach (var handler in tabletButtonEventHandlers)
-            {
-                if (handler.GetCurrentGameName() == IndividualGameName.Painting)
-                {
-                    handler.StartGame(true);
-                }
-            }
-        }
-        else if (buttonType == DebugButtonType.LevelComplete)
-        {
-            FindObjectOfType<LevelManager>().ClearLevel();
         }
     }
 }
