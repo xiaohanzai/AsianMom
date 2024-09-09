@@ -12,15 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbea64f9ff6949ceaaa38fcb984f9ae, type: 3}
   m_Name: Mole
   m_EditorClassIdentifier: 
-  SpawnObject: {fileID: 5327894165479099756, guid: d005b9c09bce6474f9c270cda71ec48d,
-    type: 3}
-  SpawnAmount: 4
-  MaxIterations: 1000
-  SpawnLoc: 3
-  Labels: 537
-  CheckOverlaps: 1
-  OverrideBounds: -1
-  LayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  SurfaceClearanceDistance: 0.5
+  prefab: {fileID: 5327894165479099756, guid: d005b9c09bce6474f9c270cda71ec48d, type: 3}
+  spawnAmount: 4
+  maxIterations: 100
+  minRadius: 0.3
+  spawnLocation: 4
+  labels: 537
+  visualizationColor: {r: 1, g: 0, b: 0, a: 1}

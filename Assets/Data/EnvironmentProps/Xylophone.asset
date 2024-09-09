@@ -12,15 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbea64f9ff6949ceaaa38fcb984f9ae, type: 3}
   m_Name: Xylophone
   m_EditorClassIdentifier: 
-  SpawnObject: {fileID: 2532854898854577389, guid: fe2133f4be82d4a6bae6fbab7c4104b0,
-    type: 3}
-  SpawnAmount: 1
-  MaxIterations: 1000
-  SpawnLoc: 5
-  Labels: -1
-  CheckOverlaps: 1
-  OverrideBounds: -1
-  LayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  SurfaceClearanceDistance: 0.1
+  prefab: {fileID: 2532854898854577389, guid: fe2133f4be82d4a6bae6fbab7c4104b0, type: 3}
+  spawnAmount: 1
+  maxIterations: 100
+  minRadius: 0.5
+  spawnLocation: 4
+  labels: 1
+  visualizationColor: {r: 1, g: 0, b: 0, a: 1}

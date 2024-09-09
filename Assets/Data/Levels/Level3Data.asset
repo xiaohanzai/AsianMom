@@ -21,6 +21,6 @@ MonoBehaviour:
     by mom!  Mom will come check in with you every once in a while!  Click on each
     game on tablet to play
   timeIntervalMax: 45
-  timeIntervalMin: 45
+  timeIntervalMin: 25
   waitTime: 5
-  nRounds: 3
+  nRounds: 4

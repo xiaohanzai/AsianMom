@@ -9,6 +9,8 @@ public class SpawnObjectsEventChannelSO : DescriptionSO
     [Tooltip("The action to perform")]
     public UnityAction<SpawnData> OnEventRaised;
 
+    public UnityAction OnObjectsSpawned;
+
     // stores the spawned objects
     private Dictionary<SpawnType, List<GameObject>> dictSpawnedObjects = new Dictionary<SpawnType, List<GameObject>>();
 
@@ -31,6 +33,7 @@ public class SpawnObjectsEventChannelSO : DescriptionSO
         {
             dictSpawnedObjects.Add(spawnType, spawnedObjects);
         }
+        OnObjectsSpawned.Invoke();
     }
 
     public List<GameObject> GetSpawnedObjects(SpawnType spawnType)

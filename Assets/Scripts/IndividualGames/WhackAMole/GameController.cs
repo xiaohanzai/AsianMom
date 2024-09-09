@@ -35,6 +35,7 @@ namespace WhackAMole
         private void Awake()
         {
             levelLoadEventChannel.OnEventRaised += PrepGame; // need to subscribe before level start events are raised
+            spawnObjectsEventChannel.OnObjectsSpawned += PrepMoles;
         }
 
         void Start()
@@ -50,6 +51,7 @@ namespace WhackAMole
             gameStartEventChannel.OnEventRaised -= StartGame;
             levelLoadEventChannel.OnEventRaised -= PrepGame;
             levelCompleteEventChannel.OnEventRaised -= OnLevelComplete;
+            spawnObjectsEventChannel.OnObjectsSpawned -= PrepMoles;
         }
 
         void Update()
@@ -85,6 +87,12 @@ namespace WhackAMole
             };
             spawnObjectsEventChannel.RaiseEvent(spawnData);
 
+            // hide hammer
+            hammer.gameObject.SetActive(false);
+        }
+
+        private void PrepMoles()
+        {
             // set up params
             moles.Clear();
             aliveMoles.Clear();
@@ -93,10 +101,10 @@ namespace WhackAMole
             foreach (var moleObject in spawnObjectsEventChannel.GetSpawnedObjects(SpawnType.Mole))
             {
                 Mole mole = moleObject.GetComponent<Mole>();
-                if (mole.transform.position.x > 500) // did not find a valid instantiation location
-                {
-                    continue;
-                }
+                //if (mole.transform.position.x > 500) // did not find a valid instantiation location
+                //{
+                //    continue;
+                //}
                 // set up mole
                 mole.SetUpParams(moveTime, waitTime);
                 mole.MoveUnderground();
@@ -104,9 +112,6 @@ namespace WhackAMole
                 moles.Add(mole);
                 mole.gameObject.SetActive(false);
             }
-
-            // hide hammer
-            hammer.gameObject.SetActive(false);
         }
 
         private void RemoveDeadMole(Mole mole)
