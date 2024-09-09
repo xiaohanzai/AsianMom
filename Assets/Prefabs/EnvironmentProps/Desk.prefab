@@ -946,11 +946,9 @@ MonoBehaviour:
     type: 2}
   setPropLocEventChannel: {fileID: 11400000, guid: a9d1a11595844464f93619933aae74b1,
     type: 2}
-  setTimeIntervalEventChannel: {fileID: 11400000, guid: 155db04210ea34437a5a43ac78a8d17d,
-    type: 2}
-  setWaitTimeEventChannel: {fileID: 11400000, guid: 7833eb8dc664f470c8ba2fa69c9abe0d,
-    type: 2}
   setInstructionTextEventChannel: {fileID: 11400000, guid: 9747f4a1fe42c434fbb5711e2352e501,
+    type: 2}
+  setSpawnMomParametersEventChannel: {fileID: 11400000, guid: 1c5a7b086e8a24d46a23efe95b7f021e,
     type: 2}
 --- !u!1 &2753406135220968342
 GameObject:

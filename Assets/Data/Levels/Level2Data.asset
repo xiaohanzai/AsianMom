@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8078c5b0c55ab42ff97eea798233d6ea, type: 3}
-  m_Name: Level1Data
+  m_Name: Level2Data
   m_EditorClassIdentifier: 
   gameDataList:
   - {fileID: 11400000, guid: 1ac49b622cf4d4cf1b1a7a904d5bcad0, type: 2}
@@ -23,4 +23,4 @@ MonoBehaviour:
   timeIntervalMax: 45
   timeIntervalMin: 45
   waitTime: 5
-  nRounds: 1000
+  nRounds: 3

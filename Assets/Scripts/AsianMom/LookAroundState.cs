@@ -41,7 +41,8 @@ namespace Mom
             }
             else
             {
-                _controller.StartWalkOutState();
+                _controller.SetNextRoundParams();
+                if (_controller.CheckRemainingRound()) _controller.StartWalkOutState();
             }
         }
     }

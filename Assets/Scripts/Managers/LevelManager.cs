@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour
     [Header("Listening to")]
     [SerializeField] private PokeButtonEventChannelSO pokeButtonEventChannel;
     [SerializeField] private IndividualGameEventChannelSO gameCompleteEventChannel;
-    [SerializeField] private VoidEventChannelSO checkIndividualGamesEventChannel;
+    [SerializeField] private BoolEventChannelSO checkIndividualGamesEventChannel;
 
     [Header("Broadcasting on")]
     [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
@@ -28,9 +28,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
     [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
     [SerializeField] private TransformEventChannelSO setPropLocEventChannel;
-    [SerializeField] private FloatEventChannelSO setTimeIntervalEventChannel;
-    [SerializeField] private FloatEventChannelSO setWaitTimeEventChannel;
     [SerializeField] private TextEventChannelSO setInstructionTextEventChannel;
+    [SerializeField] private SpawnMomParametersEventChannelSO setSpawnMomParametersEventChannel;
 
     private class InternalGameData
     {
@@ -97,8 +96,14 @@ public class LevelManager : MonoBehaviour
         }
 
         // set time intervals
-        setTimeIntervalEventChannel.RaiseEvent(levelDatas[level - 1].timeInterval);
-        setWaitTimeEventChannel.RaiseEvent(levelDatas[level - 1].waitTime);
+        SpawnMomParameters pars = new SpawnMomParameters
+        {
+            timeIntervalMax = levelDatas[level - 1].timeIntervalMax,
+            timeIntervalMin = levelDatas[level - 1].timeIntervalMin,
+            nRounds = levelDatas[level - 1].nRounds,
+            waitTime = levelDatas[level - 1].waitTime,
+        };
+        setSpawnMomParametersEventChannel.RaiseEvent(pars);
 
         // instantiate prefabs
         List<IndividualGameData> gameDataList = levelDatas[level - 1].GetGameDataList();
@@ -203,10 +208,11 @@ public class LevelManager : MonoBehaviour
         failedAudio.Play();
     }
 
-    private void CheckIfAnyGameIsOn()
+    private void CheckIfAnyGameIsOn(bool b)
     {
+        // if b == false, don't check just fail this level
         // only need to check if the cancel button is toggled on
-        if (!availableButtons[nGame].CheckIfToggleOn())
+        if (!b || !availableButtons[nGame].CheckIfToggleOn())
         {
             Invoke("PlayFailedAudio", 1.5f);
             levelFailedEventChannel.RaiseEvent();

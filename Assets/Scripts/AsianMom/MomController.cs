@@ -38,10 +38,15 @@ namespace Mom
         [SerializeField] private VoidEventChannelSO spawnMomEventChannel;
         [SerializeField] private VoidEventChannelSO levelStartEventChannel;
         [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
+        [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
         [SerializeField] private FloatEventChannelSO setWaitTimeEventChannel;
+        [SerializeField] private IntEventChannelSO setNRoundsEventChannel;
 
         [Header("Broadcasting on")]
-        [SerializeField] private VoidEventChannelSO checkIndividualGamesEventChannel;
+        [SerializeField] private BoolEventChannelSO checkIndividualGamesEventChannel;
+        [SerializeField] private VoidEventChannelSO setNextRoundParamsEventChannel;
+        [SerializeField] private FloatEventChannelSO updateMomUIEventChannel;
+        [SerializeField] private BoolEventChannelSO showMomUIEventChannel;
         [SerializeField] private VoidEventChannelSO startTimerEventChannel;
 
         private BaseState currentState;
@@ -49,20 +54,27 @@ namespace Mom
 
         private float waitTime;
 
+        private int nRounds;
+        private int currRound;
+
         void Start()
         {
             spawnMomEventChannel.OnEventRaised += StartWalkInState;
             levelStartEventChannel.OnEventRaised += StartRestState;
-            setWaitTimeEventChannel.OnEventRaised += SetWaitTime;
+            levelCompleteEventChannel.OnEventRaised += StartRestState;
             levelFailedEventChannel.OnEventRaised += StartAngryState;
+            setWaitTimeEventChannel.OnEventRaised += SetWaitTime;
+            setNRoundsEventChannel.OnEventRaised += SetNRounds;
         }
 
         private void OnDestroy()
         {
             spawnMomEventChannel.OnEventRaised -= StartWalkInState;
             levelStartEventChannel.OnEventRaised -= StartRestState;
-            setWaitTimeEventChannel.OnEventRaised -= SetWaitTime;
+            levelCompleteEventChannel.OnEventRaised += StartRestState;
             levelFailedEventChannel.OnEventRaised -= StartAngryState;
+            setWaitTimeEventChannel.OnEventRaised -= SetWaitTime;
+            setNRoundsEventChannel.OnEventRaised -= SetNRounds;
         }
 
         private void Update()
@@ -123,7 +135,6 @@ namespace Mom
 
         public void StartAngryState()
         {
-            Debug.Log("called");
             ChangeState(MomStateName.GetAngry);
         }
 
@@ -134,7 +145,7 @@ namespace Mom
 
         public void CheckIndividualGames()
         {
-            checkIndividualGamesEventChannel.RaiseEvent();
+            checkIndividualGamesEventChannel.RaiseEvent(CheckRemainingRound());
         }
 
         private void SetWaitTime(float t)
@@ -145,6 +156,21 @@ namespace Mom
         public float GetWaitTime()
         {
             return waitTime;
+        }
+
+        public void SetNRounds(int n)
+        {
+            nRounds = n;
+            currRound = 0;
+            if (nRounds < 100)
+                showMomUIEventChannel.RaiseEvent(true);
+            else
+                showMomUIEventChannel.RaiseEvent(false);
+        }
+
+        public bool CheckRemainingRound()
+        {
+            return nRounds - currRound > 0;
         }
 
         public Animator GetMomAnimator()
@@ -203,6 +229,13 @@ namespace Mom
         {
             if (doorOpen) return doorOpenAudio;
             else return doorCloseAudio;
+        }
+
+        public void SetNextRoundParams()
+        {
+            setNextRoundParamsEventChannel.RaiseEvent();
+            currRound++;
+            updateMomUIEventChannel.RaiseEvent((float)currRound / nRounds);
         }
     }
 }

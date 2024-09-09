@@ -176,7 +176,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &68367441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1507,6 +1507,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 617828237}
   m_CullTransparentMesh: 1
+--- !u!1 &679127709
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 679127711}
+  - component: {fileID: 679127710}
+  m_Layer: 0
+  m_Name: SpawnMomManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &679127710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679127709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c223fd160967f4bb0a3d1079246cfa1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setSpawnMomParametersEventChannel: {fileID: 11400000, guid: 1c5a7b086e8a24d46a23efe95b7f021e,
+    type: 2}
+  timeUpEventChannel: {fileID: 11400000, guid: dfa1f57f6179f479d999d9fccf3fa2c1, type: 2}
+  levelStartEventChannel: {fileID: 11400000, guid: 925decd1326f840e486c65833a6398b3,
+    type: 2}
+  setNextRoundParamsEventChannel: {fileID: 11400000, guid: 55d1f0928ee384a198e462d5b7e00cc4,
+    type: 2}
+  spawnMomEventChannel: {fileID: 11400000, guid: 4da0438ec4b8b4733832157a5708e7de,
+    type: 2}
+  setWaitTimeEventChannel: {fileID: 11400000, guid: 7833eb8dc664f470c8ba2fa69c9abe0d,
+    type: 2}
+  setTimeIntervalEventChannel: {fileID: 11400000, guid: 155db04210ea34437a5a43ac78a8d17d,
+    type: 2}
+  setNRoundsEventChannel: {fileID: 11400000, guid: c9756028ab01e469a939db2012cc394b,
+    type: 2}
+--- !u!4 &679127711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679127709}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.010090411, y: 0.71977985, z: 3.1881688}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &711557329
 GameObject:
   m_ObjectHideFlags: 0
@@ -4110,8 +4169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6dfd30ad5eea458bbebbef7877c2f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnMomEventChannel: {fileID: 11400000, guid: 4da0438ec4b8b4733832157a5708e7de,
-    type: 2}
+  timeUpEventChannel: {fileID: 11400000, guid: dfa1f57f6179f479d999d9fccf3fa2c1, type: 2}
   startTimerEventChannel: {fileID: 11400000, guid: 5602d664292fd4898a8322780634bdfe,
     type: 2}
   levelCompleteEventChannel: {fileID: 11400000, guid: cc996eaae2c1040c4a5728dfdd8e4486,
@@ -5218,7 +5276,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &7175507202893362815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5373,6 +5431,7 @@ SceneRoots:
   - {fileID: 4284098535431976797}
   - {fileID: 1265641461}
   - {fileID: 1924589241}
+  - {fileID: 679127711}
   - {fileID: 415716989}
   - {fileID: 1532341046}
   - {fileID: 115381266982576798}

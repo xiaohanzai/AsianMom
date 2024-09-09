@@ -5,10 +5,11 @@ using UnityEngine;
 public class GameClockManager : MonoBehaviour
 {
     private float timeInterval;
+
     private float timer;
 
     [Header("Broadcasting on")]
-    [SerializeField] private VoidEventChannelSO spawnMomEventChannel;
+    [SerializeField] private VoidEventChannelSO timeUpEventChannel;
 
     [Header("Listening to")]
     [SerializeField] private VoidEventChannelSO startTimerEventChannel;
@@ -56,6 +57,6 @@ public class GameClockManager : MonoBehaviour
         if (timer > timeInterval) return;
 
         timer += Time.deltaTime;
-        if (timer > timeInterval) spawnMomEventChannel.RaiseEvent();
+        if (timer > timeInterval) timeUpEventChannel.RaiseEvent();
     }
 }
