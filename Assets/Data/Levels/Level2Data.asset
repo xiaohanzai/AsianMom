@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameDataList:
   - {fileID: 11400000, guid: 33fd95912779246a3b6bd53c60ec3746, type: 2}
-  - {fileID: 11400000, guid: d8bee8e2497374e35830e7e229ff3800, type: 2}
+  - {fileID: 11400000, guid: f6879273c8d4340a89e701cafff04422, type: 2}
   - {fileID: 11400000, guid: 61d46dfc4df1e46dda595e3d31468f17, type: 2}
   instructionText: Mom is suspicious that you are not studying.  Complete the goof-off
     activities before mom's suspicion level reaches maximum!

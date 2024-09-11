@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace MusicGame
 {
@@ -11,7 +12,14 @@ namespace MusicGame
         [SerializeField] private MusicKey[] musicKeys;
         [SerializeField] private Drumstick drumstick;
         [SerializeField] private Transform drumstickLoc;
-        [SerializeField] private TextMeshProUGUI musicText;
+        [SerializeField] private Image musicNotation;
+
+        private float musicStartTime;
+        private float musicEndTime;
+        private float musicSpeed;
+
+        private Sprite originalNotation;
+        private Sprite newNotation;
 
         [Header("Audios")]
         [SerializeField] private AudioSource musicAudio;
@@ -33,6 +41,8 @@ namespace MusicGame
 
         private void Start()
         {
+            originalNotation = musicNotation.sprite;
+
             setMusicEventChannel.OnEventRaised += PrepGame;
             gameStartEventChannel.OnEventRaised += StartGame;
             levelCompleteEventChannel.OnEventRaised += OnLevelComplete;
@@ -62,8 +72,12 @@ namespace MusicGame
 
             correctSequence = data.sequence;
             musicAudio.clip = data.audioClip;
+            newNotation = data.notation;
+            musicStartTime = data.timeStart;
+            musicEndTime = data.timeEnd;
+            musicSpeed = data.playSpeed;
+
             drumstick.gameObject.SetActive(false);
-            SetText();
         }
 
         private void StartGame(IndividualGameName gameName)
@@ -84,8 +98,9 @@ namespace MusicGame
                 return;
             }
 
-            musicAudio.Play();
+            StartCoroutine(Co_PlayMusicAudio());
             gameStarted = true;
+            musicNotation.sprite = newNotation;
             drumstick.gameObject.SetActive(true);
             drumstick.transform.position = drumstickLoc.transform.position;
             drumstick.transform.rotation = drumstickLoc.transform.rotation;
@@ -95,8 +110,9 @@ namespace MusicGame
         private void EndGame()
         {
             gameStarted = false;
-            musicAudio.Stop();
+            if (musicAudio.isPlaying) musicAudio.Stop();
             drumstick.gameObject.SetActive(false);
+            musicNotation.sprite = originalNotation;
         }
 
         private void CompleteGame()
@@ -104,6 +120,25 @@ namespace MusicGame
             gameCompleted = true;
             //drumstick.gameObject.SetActive(false);
             gameCompleteEventChannel.RaiseEvent(IndividualGameName.Music);
+        }
+
+        private IEnumerator Co_PlayMusicAudio()
+        {
+            musicAudio.pitch = musicSpeed;
+            musicAudio.time = musicStartTime;
+            musicAudio.Play();
+            float timeElapsed = 0f;
+            while (timeElapsed < (musicEndTime - musicStartTime) / musicSpeed)
+            {
+                // If the audio is no longer playing, exit the coroutine early
+                if (!musicAudio.isPlaying)
+                {
+                    yield break;
+                }
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+            musicAudio.Stop();
         }
 
         private void CheckSequence(MusicKeyName k)
@@ -129,20 +164,9 @@ namespace MusicGame
             }
         }
 
-        private void SetText()
-        {
-            string text = "Play sequence:\n";
-            foreach (var item in correctSequence)
-            {
-                text += item.ToString() + " ";
-            }
-            musicText.text = text;
-        }
-
         private void OnLevelComplete()
         {
-            musicText.text = "";
-            //correctSequence.Clear();
+            musicNotation.sprite = originalNotation;
             musicAudio.clip = null;
         }
     }

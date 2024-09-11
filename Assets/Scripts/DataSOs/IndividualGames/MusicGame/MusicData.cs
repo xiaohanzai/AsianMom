@@ -7,9 +7,12 @@ namespace MusicGame
     [CreateAssetMenu(fileName = "NewMusicData", menuName = "Data/Individual Games/Music Game/Music Data")]
     public class MusicData : ScriptableObject
     {
-        public MusicName musicName;
+        public Sprite notation;
         public List<MusicKeyName> sequence;
         public AudioClip audioClip;
+        public float playSpeed = 1f;
+        public float timeStart;
+        public float timeEnd;
     }
 
     public enum MusicName
