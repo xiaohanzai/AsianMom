@@ -33,6 +33,7 @@ public class SpawnObjectsEventChannelSO : DescriptionSO
         {
             dictSpawnedObjects.Add(spawnType, spawnedObjects);
         }
+        Debug.Log(spawnType);
         OnObjectsSpawned.Invoke();
     }
 

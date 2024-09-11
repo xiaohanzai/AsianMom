@@ -38,7 +38,6 @@ namespace Mom
         [SerializeField] private VoidEventChannelSO spawnMomEventChannel;
         [SerializeField] private VoidEventChannelSO levelStartEventChannel;
         [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
-        [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
         [SerializeField] private FloatEventChannelSO setWaitTimeEventChannel;
         [SerializeField] private IntEventChannelSO setNRoundsEventChannel;
 
@@ -47,7 +46,6 @@ namespace Mom
         [SerializeField] private VoidEventChannelSO setNextRoundParamsEventChannel;
         [SerializeField] private FloatEventChannelSO updateMomUIEventChannel;
         [SerializeField] private BoolEventChannelSO showMomUIEventChannel;
-        [SerializeField] private VoidEventChannelSO startTimerEventChannel;
 
         private BaseState currentState;
         private MomStateName currentStateName;
@@ -61,7 +59,6 @@ namespace Mom
         {
             spawnMomEventChannel.OnEventRaised += StartWalkInState;
             levelStartEventChannel.OnEventRaised += StartRestState;
-            levelCompleteEventChannel.OnEventRaised += StartRestState;
             levelFailedEventChannel.OnEventRaised += StartAngryState;
             setWaitTimeEventChannel.OnEventRaised += SetWaitTime;
             setNRoundsEventChannel.OnEventRaised += SetNRounds;
@@ -71,7 +68,6 @@ namespace Mom
         {
             spawnMomEventChannel.OnEventRaised -= StartWalkInState;
             levelStartEventChannel.OnEventRaised -= StartRestState;
-            levelCompleteEventChannel.OnEventRaised += StartRestState;
             levelFailedEventChannel.OnEventRaised -= StartAngryState;
             setWaitTimeEventChannel.OnEventRaised -= SetWaitTime;
             setNRoundsEventChannel.OnEventRaised -= SetNRounds;
@@ -94,7 +90,7 @@ namespace Mom
             {
                 case MomStateName.Rest:
                     newState = new RestState(this);
-                    startTimerEventChannel.RaiseEvent();
+                    Debug.Log("called here");
                     break;
                 case MomStateName.WalkIn:
                     newState = new WalkState(this, true);

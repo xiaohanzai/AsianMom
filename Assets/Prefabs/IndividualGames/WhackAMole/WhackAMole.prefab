@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7095535512498936225}
+  - component: {fileID: 4106049977132194493}
   m_Layer: 0
   m_Name: WhackAMole
   m_TagString: Untagged
@@ -33,6 +34,32 @@ Transform:
   - {fileID: 7540250922426492225}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4106049977132194493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3721480450690566269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7baac53035b894f8084d4e9920ff949f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  molePropData: {fileID: 11400000, guid: 2684fdea1282e464b8006b08829bae11, type: 2}
+  hammer: {fileID: 3793233984691862314}
+  moveTime: 1
+  waitTime: 4
+  spawnObjectsEventChannel: {fileID: 11400000, guid: 3ad092d5d1eb8439a824c5abc5b981c7,
+    type: 2}
+  gameCompleteEventChannel: {fileID: 11400000, guid: b2ac92ccc069a4f4d9cb6db9d4ca4426,
+    type: 2}
+  gameStartEventChannel: {fileID: 11400000, guid: 2256128526c8a445f9e6a9f5e718a719,
+    type: 2}
+  levelLoadEventChannel: {fileID: 11400000, guid: 1992b7052c9c94549a8403b93e68f5c6,
+    type: 2}
+  levelCompleteEventChannel: {fileID: 11400000, guid: cc996eaae2c1040c4a5728dfdd8e4486,
+    type: 2}
 --- !u!1 &7548382680351615051
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,7 +69,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2519526611015453684}
-  - component: {fileID: 7703448683747318565}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -65,32 +91,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7095535512498936225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7703448683747318565
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7548382680351615051}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7baac53035b894f8084d4e9920ff949f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  molePropData: {fileID: 11400000, guid: 2684fdea1282e464b8006b08829bae11, type: 2}
-  hammer: {fileID: 3793233984691862314}
-  moveTime: 1
-  waitTime: 4
-  spawnObjectsEventChannel: {fileID: 11400000, guid: 3ad092d5d1eb8439a824c5abc5b981c7,
-    type: 2}
-  gameCompleteEventChannel: {fileID: 11400000, guid: b2ac92ccc069a4f4d9cb6db9d4ca4426,
-    type: 2}
-  gameStartEventChannel: {fileID: 11400000, guid: 2256128526c8a445f9e6a9f5e718a719,
-    type: 2}
-  levelLoadEventChannel: {fileID: 11400000, guid: 1992b7052c9c94549a8403b93e68f5c6,
-    type: 2}
-  levelCompleteEventChannel: {fileID: 11400000, guid: cc996eaae2c1040c4a5728dfdd8e4486,
-    type: 2}
 --- !u!1001 &8244057721061714125
 PrefabInstance:
   m_ObjectHideFlags: 0

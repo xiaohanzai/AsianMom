@@ -8,8 +8,8 @@ namespace MusicGame
     {
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log(other.gameObject.name);
-            Debug.Log(other.GetComponent<MusicKey>() == null);
+            //Debug.Log(other.gameObject.name);
+            //Debug.Log(other.GetComponent<MusicKey>() == null);
         }
     }
 }

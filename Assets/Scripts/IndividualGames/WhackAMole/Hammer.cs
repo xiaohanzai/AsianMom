@@ -4,34 +4,8 @@ using UnityEngine;
 
 namespace WhackAMole
 {
-    public class Hammer : MonoBehaviour
+    public class Hammer : ToolToAppearAtDesk
     {
-        private Vector3 spawnPos;
-        private Quaternion spawnRot;
-
-        [Header("Listening to")]
-        [SerializeField] private TransformEventChannelSO setPropLocEventChannel;
-
-        private void Awake()
-        {
-            setPropLocEventChannel.OnEventRaised += SetLocation;
-        }
-
-        private void OnDestroy()
-        {
-            setPropLocEventChannel.OnEventRaised -= SetLocation;
-        }
-
-        private void SetLocation(Transform t)
-        {
-            spawnPos = t.position;
-            spawnRot = t.rotation;
-        }
-
-        public void PutToSpawnLoc()
-        {
-            transform.position = spawnPos;
-            transform.rotation = spawnRot;
-        }
+        
     }
 }

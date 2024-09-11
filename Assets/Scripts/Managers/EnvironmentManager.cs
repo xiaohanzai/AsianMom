@@ -223,11 +223,13 @@ public class EnvironmentManager : MonoBehaviour
 
     private IEnumerator Co_SpawnObjects(SpawnData data)
     {
+        Debug.Log("spawning???" + data.environmentPropData.spawnAmount);
         List<GameObject> objects = new List<GameObject>();
         for (int i = 0; i < data.environmentPropData.spawnAmount; i++)
         {
             yield return StartCoroutine(TrySpawnObject(MRUK.Instance.GetCurrentRoom(), data.environmentPropData, objects));
         }
         spawnObjectsEventChannel.AddToSpawnedObjectsDict(data.spawnType, objects);
+        Debug.Log("spawned???" + objects.Count);
     }
 }

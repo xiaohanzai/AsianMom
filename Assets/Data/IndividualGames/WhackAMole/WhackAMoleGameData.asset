@@ -16,5 +16,4 @@ MonoBehaviour:
   gamePrefab: {fileID: 3721480450690566269, guid: fad91cc6106574ffaa8b31bd3589931f,
     type: 3}
   buttonText: Play Whack A Mole
-  instructionText: Use the hammer to kill the moles on your floor; there are 4 moles
-    to kill
+  instructionText: Use the hammer to kill the moles on your floor

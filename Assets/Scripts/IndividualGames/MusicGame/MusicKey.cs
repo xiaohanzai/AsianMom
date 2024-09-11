@@ -32,19 +32,11 @@ namespace MusicGame
 
         private void OnTriggerExit(Collider other)
         {
-            Debug.Log(other.gameObject.GetComponent<DrumstickCollider>() != null);
             if (other.gameObject.GetComponent<DrumstickCollider>() != null)
             {
                 audioSource.Play();
                 Evt_OnKeyHit.Invoke(keyName);
-                Debug.Log("???");
             }
         }
-        //private void OnCollisionExit(Collision collision)
-        //{
-        //    Debug.Log(collision.gameObject.name);
-        //    Debug.Log(collision.gameObject.GetComponent<DrumstickCollider>() == null);
-            
-        //}
     }
 }

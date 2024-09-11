@@ -114,15 +114,15 @@ namespace PaintingGame
         private void CompleteGame()
         {
             gameCompleted = true;
-            paintBrush.gameObject.SetActive(false);
+            //paintBrush.gameObject.SetActive(false);
             foreach (var item in paintingPatternsParent.GetAllPatterns())
             {
                 item.SetCanPaint(false);
                 item.Evt_OnPatternColored.RemoveListener(CheckPatternColor);
             }
-            originalImage.gameObject.SetActive(false);
-            paintingPatternsParent.gameObject.SetActive(false);
-            paintBrush.ResetColor();
+            //originalImage.gameObject.SetActive(false);
+            //paintingPatternsParent.gameObject.SetActive(false);
+            //paintBrush.ResetColor();
             gameCompleteEventChannel.RaiseEvent(IndividualGameName.Painting);
         }
 

@@ -42,4 +42,6 @@ public enum PokeButtonType
     ConfirmEnvironment,
     LoadLevel,
     StartLevel,
+    Quit,
+    PlayAgain,
 }

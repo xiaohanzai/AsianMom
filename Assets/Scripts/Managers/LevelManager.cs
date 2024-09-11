@@ -27,6 +27,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private VoidEventChannelSO levelStartEventChannel;
     [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
     [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
+    [SerializeField] private VoidEventChannelSO allLevelsCompleteEventChannel;
     [SerializeField] private TransformEventChannelSO setPropLocEventChannel;
     [SerializeField] private TextEventChannelSO setInstructionTextEventChannel;
     [SerializeField] private SpawnMomParametersEventChannelSO setSpawnMomParametersEventChannel;
@@ -43,9 +44,11 @@ public class LevelManager : MonoBehaviour
     {
         pokeButtonEventChannel.OnEventRaised += LoadNewLevelData;
         pokeButtonEventChannel.OnEventRaised += StartLevel;
-        gameCompleteEventChannel.OnEventRaised += DisableGameButton;
-        gameCompleteEventChannel.OnEventRaised += DisableGame;
-        gameCompleteEventChannel.OnEventRaised += PlaySuccessAudio;
+        pokeButtonEventChannel.OnEventRaised += PlayAgain;
+        pokeButtonEventChannel.OnEventRaised += QuitGame;
+        //gameCompleteEventChannel.OnEventRaised += DisableGameButton;
+        gameCompleteEventChannel.OnEventRaised += DelayedDisableGame;
+        gameCompleteEventChannel.OnEventRaised += DelayedPlaySuccessAudio;
         checkIndividualGamesEventChannel.OnEventRaised += CheckIfAnyGameIsOn;
     }
 
@@ -53,9 +56,11 @@ public class LevelManager : MonoBehaviour
     {
         pokeButtonEventChannel.OnEventRaised -= LoadNewLevelData;
         pokeButtonEventChannel.OnEventRaised -= StartLevel;
-        gameCompleteEventChannel.OnEventRaised -= DisableGameButton;
-        gameCompleteEventChannel.OnEventRaised -= DisableGame;
-        gameCompleteEventChannel.OnEventRaised -= PlaySuccessAudio;
+        pokeButtonEventChannel.OnEventRaised -= PlayAgain;
+        pokeButtonEventChannel.OnEventRaised += QuitGame;
+        //gameCompleteEventChannel.OnEventRaised -= DisableGameButton;
+        gameCompleteEventChannel.OnEventRaised -= DelayedDisableGame;
+        gameCompleteEventChannel.OnEventRaised -= DelayedPlaySuccessAudio;
         checkIndividualGamesEventChannel.OnEventRaised -= CheckIfAnyGameIsOn;
     }
 
@@ -91,6 +96,7 @@ public class LevelManager : MonoBehaviour
             level++;
             if (level > levelDatas.Count)
             {
+                allLevelsCompleteEventChannel.RaiseEvent();
                 return;
             }
         }
@@ -147,6 +153,25 @@ public class LevelManager : MonoBehaviour
         levelLoadEventChannel.RaiseEvent();
     }
 
+    private void PlayAgain(PokeButtonType type)
+    {
+        if (type != PokeButtonType.PlayAgain) return;
+
+        level = 1;
+        isLevelComplete = true;
+        ClearSpawnedGames();
+        foreach (var item in availableButtons)
+        {
+            item.ResetButton();
+        }
+    }
+
+    private void QuitGame(PokeButtonType type)
+    {
+        if (type != PokeButtonType.Quit) return;
+        Application.Quit();
+    }
+
     private void StartLevel(PokeButtonType type)
     {
         if (type != PokeButtonType.StartLevel) return;
@@ -173,15 +198,24 @@ public class LevelManager : MonoBehaviour
     private void DisableGameButton(IndividualGameName data)
     {
         // disable tablet button; called when an individual game is complete
-        gameNameDataPairs[data].button.SetDisabled();
         availableButtons[nGame].SetToggleOn();
+        gameNameDataPairs[data].button.SetDisabled();
     }
 
-    private void DisableGame(IndividualGameName data)
+    private void DelayedDisableGame(IndividualGameName data)
     {
+        StartCoroutine(Co_DisableGame(data));
+    }
+
+    private IEnumerator Co_DisableGame(IndividualGameName data)
+    {
+        yield return new WaitForSeconds(1);
+
         // disable the instantiated gameobjects of an individual game; called when an individual game is complete
         gameNameDataPairs[data].isCompleted = true;
         gameNameDataPairs[data].go.SetActive(false);
+
+        DisableGameButton(data);
 
         // check whether level is complete
         int sum = 0;
@@ -198,7 +232,12 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private void PlaySuccessAudio(IndividualGameName data)
+    private void DelayedPlaySuccessAudio(IndividualGameName data)
+    {
+        Invoke("PlaySuccessAudio", 1f);
+    }
+
+    private void PlaySuccessAudio()
     {
         successAudio.Play();
     }

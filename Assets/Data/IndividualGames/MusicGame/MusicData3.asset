@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MusicData3
   m_EditorClassIdentifier: 
   musicName: 2
-  sequence: 
-  audioClip: {fileID: 0}
+  sequence: 0000000001000000
+  audioClip: {fileID: 8300000, guid: c30d648ee1970467f9980a21ab0c1d63, type: 3}

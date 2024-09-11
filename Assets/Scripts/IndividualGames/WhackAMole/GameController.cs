@@ -10,7 +10,6 @@ namespace WhackAMole
     {
         [SerializeField] private EnvironmentPropData molePropData;
         [SerializeField] private Hammer hammer;
-        [SerializeField] private Transform molesParent;
 
         [SerializeField] private float moveTime; // time for mole to travel up
         [SerializeField] private float waitTime; // time for mole to stay above ground
@@ -160,7 +159,7 @@ namespace WhackAMole
         private void EndGame()
         {
             gameStarted = false;
-            hammer.gameObject.SetActive(false); // hide hammer
+            //hammer.gameObject.SetActive(false); // hide hammer
             foreach (var mole in moles) // move moles underground and hide them
             {
                 mole.MoveUnderground();
@@ -172,7 +171,7 @@ namespace WhackAMole
         private void CompleteGame()
         {
             gameCompleted = true;
-            hammer.gameObject.SetActive(false);
+            //hammer.gameObject.SetActive(false);
             foreach (var mole in moles)
             {
                 mole.Evt_OnMoleDied.RemoveListener(RemoveDeadMole);

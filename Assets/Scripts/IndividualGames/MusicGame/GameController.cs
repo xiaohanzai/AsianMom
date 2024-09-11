@@ -102,7 +102,7 @@ namespace MusicGame
         private void CompleteGame()
         {
             gameCompleted = true;
-            drumstick.gameObject.SetActive(false);
+            //drumstick.gameObject.SetActive(false);
             gameCompleteEventChannel.RaiseEvent(IndividualGameName.Music);
         }
 
@@ -142,7 +142,7 @@ namespace MusicGame
         private void OnLevelComplete()
         {
             musicText.text = "";
-            correctSequence.Clear();
+            //correctSequence.Clear();
             musicAudio.clip = null;
         }
     }

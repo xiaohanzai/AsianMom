@@ -14,6 +14,8 @@ public class DebugButtonEventHandler : MonoBehaviour
         PlayWhackAMole,
         PlayMusicGame,
         PlayPaintingGame,
+        PlayShootFly,
+        PlayCatchLadybug,
         Cancel,
     }
     [SerializeField] private DebugButtonType buttonType;
@@ -45,6 +47,12 @@ public class DebugButtonEventHandler : MonoBehaviour
                 break;
             case DebugButtonType.PlayPaintingGame:
                 FindAndCallTabletButton(IndividualGameName.Painting);
+                break;
+            case DebugButtonType.PlayShootFly:
+                FindAndCallTabletButton(IndividualGameName.ShootFly);
+                break;
+            case DebugButtonType.PlayCatchLadybug:
+                FindAndCallTabletButton(IndividualGameName.CatchLadybug);
                 break;
             case DebugButtonType.Cancel:
                 FindAndCallTabletButton(IndividualGameName.Null);

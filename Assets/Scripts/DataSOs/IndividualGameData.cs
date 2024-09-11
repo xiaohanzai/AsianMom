@@ -24,5 +24,7 @@ public enum IndividualGameName
     Null,
     WhackAMole,
     Music,
-    Painting
+    Painting,
+    ShootFly,
+    CatchLadybug,
 }

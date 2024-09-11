@@ -18,7 +18,7 @@ public class FloatingUIManager : MonoBehaviour
 
     private void Start()
     {
-        SetPosition();
+        //SetPosition();
         HideShuffleEnvironmentUIAndButtons();
 
         pokeButtonEventChannel.OnEventRaised += HideLogoUIAndButtons;
