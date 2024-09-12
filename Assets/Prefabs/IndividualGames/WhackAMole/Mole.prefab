@@ -704,7 +704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dabfeb83c59e4d2eba708e76856469f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ignoreAnchorLabels: 1
+  ignoreAnchorLabels: -1
   overlapBoxSize: {x: 0.3, y: 0.2, z: 0.3}
   overlapBoxCenter: {x: 0, y: 0.8, z: 0}
 --- !u!1 &5776078049779701624

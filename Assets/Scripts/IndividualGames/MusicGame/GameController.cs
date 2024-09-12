@@ -9,10 +9,13 @@ namespace MusicGame
 {
     public class GameController : MonoBehaviour
     {
+        [SerializeField] private GameObject viualsParent;
+
         [SerializeField] private MusicKey[] musicKeys;
         [SerializeField] private Drumstick drumstick;
         [SerializeField] private Transform drumstickLoc;
         [SerializeField] private Image musicNotation;
+        [SerializeField] private GameObject notationParent;
 
         private float musicStartTime;
         private float musicEndTime;
@@ -42,6 +45,8 @@ namespace MusicGame
         private void Start()
         {
             originalNotation = musicNotation.sprite;
+            notationParent.SetActive(false);
+            drumstick.gameObject.SetActive(false);
 
             setMusicEventChannel.OnEventRaised += PrepGame;
             gameStartEventChannel.OnEventRaised += StartGame;
@@ -51,6 +56,8 @@ namespace MusicGame
             {
                 key.Evt_OnKeyHit.AddListener(CheckSequence);
             }
+
+            viualsParent.SetActive(false);
         }
 
         private void OnDestroy()
@@ -77,7 +84,11 @@ namespace MusicGame
             musicEndTime = data.timeEnd;
             musicSpeed = data.playSpeed;
 
+            notationParent.SetActive(false);
+            
             drumstick.gameObject.SetActive(false);
+
+            viualsParent.SetActive(false);
         }
 
         private void StartGame(IndividualGameName gameName)
@@ -98,8 +109,11 @@ namespace MusicGame
                 return;
             }
 
+            viualsParent.SetActive(true);
+
             StartCoroutine(Co_PlayMusicAudio());
             gameStarted = true;
+            notationParent.SetActive(true);
             musicNotation.sprite = newNotation;
             drumstick.gameObject.SetActive(true);
             drumstick.transform.position = drumstickLoc.transform.position;
@@ -112,7 +126,9 @@ namespace MusicGame
             gameStarted = false;
             if (musicAudio.isPlaying) musicAudio.Stop();
             drumstick.gameObject.SetActive(false);
+            notationParent.SetActive(false);
             musicNotation.sprite = originalNotation;
+            viualsParent.SetActive(false);
         }
 
         private void CompleteGame()
@@ -120,6 +136,12 @@ namespace MusicGame
             gameCompleted = true;
             //drumstick.gameObject.SetActive(false);
             gameCompleteEventChannel.RaiseEvent(IndividualGameName.Music);
+            Invoke("HideVisuals", 0.5f);
+        }
+
+        private void HideVisuals()
+        {
+            viualsParent.SetActive(false);
         }
 
         private IEnumerator Co_PlayMusicAudio()
@@ -166,6 +188,7 @@ namespace MusicGame
 
         private void OnLevelComplete()
         {
+            notationParent.SetActive(false);
             musicNotation.sprite = originalNotation;
             musicAudio.clip = null;
         }

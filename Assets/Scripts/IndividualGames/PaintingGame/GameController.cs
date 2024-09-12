@@ -8,6 +8,8 @@ namespace PaintingGame
 {
     public class GameController : MonoBehaviour
     {
+        [SerializeField] private GameObject viualsParent;
+
         [SerializeField] private Image originalImage;
         [SerializeField] private Transform paintingTransform;
         [SerializeField] private PaintBrush paintBrush;
@@ -29,9 +31,13 @@ namespace PaintingGame
 
         private void Start()
         {
+            paintBrush.gameObject.SetActive(false);
+
             setPaintingEventChannel.OnEventRaised += PrepGame;
             gameStartEventChannel.OnEventRaised += StartGame;
             levelCompleteEventChannel.OnEventRaised += OnLevelComplete;
+
+            viualsParent.SetActive(false);
         }
 
         private void OnDestroy()
@@ -56,6 +62,8 @@ namespace PaintingGame
             originalImage.gameObject.SetActive(false);
 
             paintBrush.gameObject.SetActive(false);
+
+            viualsParent.SetActive(false);
         }
 
         private void StartGame(IndividualGameName gameName)
@@ -75,6 +83,8 @@ namespace PaintingGame
             {
                 return;
             }
+
+            viualsParent.SetActive(true);
 
             gameStarted = true;
             paintingPatternsParent.gameObject.SetActive(true);
@@ -109,6 +119,7 @@ namespace PaintingGame
                 item.Evt_OnPatternColored.RemoveListener(CheckPatternColor);
             }
             paintingPatternsParent.gameObject.SetActive(false);
+            viualsParent.SetActive(false);
         }
 
         private void CompleteGame()
@@ -124,12 +135,18 @@ namespace PaintingGame
             //paintingPatternsParent.gameObject.SetActive(false);
             //paintBrush.ResetColor();
             gameCompleteEventChannel.RaiseEvent(IndividualGameName.Painting);
+            Invoke("HideVisuals", 0.5f);
         }
 
         private void OnLevelComplete()
         {
             Destroy(paintingPatternsParent);
             originalImage.sprite = null;
+        }
+
+        private void HideVisuals()
+        {
+            viualsParent.SetActive(false);
         }
 
         private void CheckPatternColor(PaintingPattern p, bool b)

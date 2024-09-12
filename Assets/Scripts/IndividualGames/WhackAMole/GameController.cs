@@ -159,7 +159,7 @@ namespace WhackAMole
         private void EndGame()
         {
             gameStarted = false;
-            //hammer.gameObject.SetActive(false); // hide hammer
+            hammer.gameObject.SetActive(false); // hide hammer
             foreach (var mole in moles) // move moles underground and hide them
             {
                 mole.MoveUnderground();
