@@ -17,6 +17,7 @@ public class DebugButtonEventHandler : MonoBehaviour
         PlayShootFly,
         PlayCatchLadybug,
         Cancel,
+        TryAgain,
     }
     [SerializeField] private DebugButtonType buttonType;
 
@@ -38,6 +39,9 @@ public class DebugButtonEventHandler : MonoBehaviour
                 break;
             case DebugButtonType.StartLevel:
                 FindAndCallPokeButton(PokeButtonType.StartLevel);
+                break;
+            case DebugButtonType.TryAgain:
+                FindAndCallPokeButton(PokeButtonType.TryAgain);
                 break;
             case DebugButtonType.PlayWhackAMole:
                 FindAndCallTabletButton(IndividualGameName.WhackAMole);

@@ -31,21 +31,25 @@ namespace Mom
         [SerializeField] private AudioSource walkingAudio;
         [SerializeField] private AudioSource lookAroundAudio;
         [SerializeField] private AudioSource angryAudio;
+        [SerializeField] private AudioSource walkOutAudio;
         [SerializeField] private AudioSource doorOpenAudio;
         [SerializeField] private AudioSource doorCloseAudio;
 
         [Header("Listening to")]
         [SerializeField] private VoidEventChannelSO spawnMomEventChannel;
         [SerializeField] private VoidEventChannelSO levelStartEventChannel;
+        [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
         [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
         [SerializeField] private FloatEventChannelSO setWaitTimeEventChannel;
         [SerializeField] private IntEventChannelSO setNRoundsEventChannel;
+        [SerializeField] private AudioEventChannelSO momWalkOutAudioEventChannel;
 
         [Header("Broadcasting on")]
         [SerializeField] private BoolEventChannelSO checkIndividualGamesEventChannel;
         [SerializeField] private VoidEventChannelSO setNextRoundParamsEventChannel;
         [SerializeField] private FloatEventChannelSO updateMomUIEventChannel;
         [SerializeField] private BoolEventChannelSO showMomUIEventChannel;
+        [SerializeField] private VoidEventChannelSO timerStartEventChannel;
 
         private BaseState currentState;
         private MomStateName currentStateName;
@@ -59,18 +63,22 @@ namespace Mom
         {
             spawnMomEventChannel.OnEventRaised += StartWalkInState;
             levelStartEventChannel.OnEventRaised += StartRestState;
+            levelLoadEventChannel.OnEventRaised += PutBehindDoor;
             levelFailedEventChannel.OnEventRaised += StartAngryState;
             setWaitTimeEventChannel.OnEventRaised += SetWaitTime;
             setNRoundsEventChannel.OnEventRaised += SetNRounds;
+            momWalkOutAudioEventChannel.OnEventRaised += SetWalkOutAudio;
         }
 
         private void OnDestroy()
         {
             spawnMomEventChannel.OnEventRaised -= StartWalkInState;
             levelStartEventChannel.OnEventRaised -= StartRestState;
+            levelLoadEventChannel.OnEventRaised -= PutBehindDoor;
             levelFailedEventChannel.OnEventRaised -= StartAngryState;
             setWaitTimeEventChannel.OnEventRaised -= SetWaitTime;
             setNRoundsEventChannel.OnEventRaised -= SetNRounds;
+            momWalkOutAudioEventChannel.OnEventRaised -= SetWalkOutAudio;
         }
 
         private void Update()
@@ -90,7 +98,7 @@ namespace Mom
             {
                 case MomStateName.Rest:
                     newState = new RestState(this);
-                    Debug.Log("called here");
+                    timerStartEventChannel.RaiseEvent();
                     break;
                 case MomStateName.WalkIn:
                     newState = new WalkState(this, true);
@@ -112,6 +120,15 @@ namespace Mom
                 currentState.ExitState();
             currentState = newState;
             currentState.EnterState();
+        }
+
+        private void PutBehindDoor()
+        {
+            visualsParent.transform.position = doorTriggerLoc.position;
+            if (doorAnimator.GetBool("IsDoorOpening"))
+            {
+                doorAnimator.SetBool("IsDoorOpening", false);
+            }
         }
 
         public void StartRestState()
@@ -211,7 +228,7 @@ namespace Mom
                 case MomStateName.WalkIn:
                     return walkingAudio;
                 case MomStateName.WalkOut:
-                    return walkingAudio;
+                    return walkOutAudio;
                 case MomStateName.LookAround:
                     return lookAroundAudio;
                 case MomStateName.GetAngry:
@@ -219,6 +236,11 @@ namespace Mom
                 default:
                     return null;
             }
+        }
+
+        private void SetWalkOutAudio(AudioClip audio)
+        {
+            walkOutAudio.clip = audio;
         }
 
         public AudioSource GetDoorAudio(bool doorOpen)

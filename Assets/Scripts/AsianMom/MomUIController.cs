@@ -12,12 +12,14 @@ namespace Mom
 
         [Header("Listening to")]
         [SerializeField] private VoidEventChannelSO levelStartEventChannel;
+        [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
         [SerializeField] private FloatEventChannelSO updateMomUIEventChannel;
         [SerializeField] private BoolEventChannelSO showMomUIEventChannel;
 
         private void Start()
         {
             levelStartEventChannel.OnEventRaised += ResetSuspicionBar;
+            levelFailedEventChannel.OnEventRaised += SetMaxSuspicionBar;
             updateMomUIEventChannel.OnEventRaised += UpdateSuspicionBar;
             showMomUIEventChannel.OnEventRaised += EnableSuspicionBar;
         }
@@ -25,8 +27,22 @@ namespace Mom
         private void OnDestroy()
         {
             levelStartEventChannel.OnEventRaised -= ResetSuspicionBar;
+            levelFailedEventChannel.OnEventRaised -= SetMaxSuspicionBar;
             updateMomUIEventChannel.OnEventRaised -= UpdateSuspicionBar;
             showMomUIEventChannel.OnEventRaised -= EnableSuspicionBar;
+        }
+
+        private void Update()
+        {
+            if (suspicionBarParent.activeInHierarchy)
+            {
+                Vector3 directionToCamera = suspicionBarParent.transform.position - Camera.main.transform.position;
+                directionToCamera.y = 0;
+                if (directionToCamera != Vector3.zero)
+                {
+                    suspicionBarParent.transform.rotation = Quaternion.LookRotation(directionToCamera);
+                }
+            }
         }
 
         private void ResetSuspicionBar()
@@ -42,6 +58,11 @@ namespace Mom
         private void EnableSuspicionBar(bool b)
         {
             suspicionBarParent.SetActive(b);
+        }
+
+        private void SetMaxSuspicionBar()
+        {
+            suspicionBar.fillAmount = 1;
         }
     }
 }

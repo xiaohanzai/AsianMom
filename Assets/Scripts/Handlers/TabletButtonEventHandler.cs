@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using Mom;
+using UnityEngine.Video;
 
 public class TabletButtonEventHandler : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI buttonTMP;
     [SerializeField] private Toggle toggle;
 
+    private IndividualGameName gameName;
     private string instructionText;
+    private VideoClip instructionVideo;
+    private AudioClip audioClip;
 
     [Header("Broadcasting on")]
     [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
-    [SerializeField] private TextEventChannelSO setInstructionTextEventChannel;
-
-    private IndividualGameName gameName;
+    [SerializeField] private UIInstructionEventChannelSO uIInstructionEventChannel;
+    [SerializeField] private AudioEventChannelSO deskAudioEventChannel;
 
     private void Start()
     {
         ResetButton();
+        SetDisabled();
     }
 
     public void StartGame(bool start)
@@ -28,7 +31,13 @@ public class TabletButtonEventHandler : MonoBehaviour
         if (start)
         {
             gameStartEventChannel.RaiseEvent(gameName);
-            setInstructionTextEventChannel.RaiseEvent(instructionText);
+            UIInstruction data = new UIInstruction
+            {
+                text = instructionText,
+                video = instructionVideo,
+            };
+            uIInstructionEventChannel.RaiseEvent(data);
+            deskAudioEventChannel.RaiseEvent(audioClip);
         }
         else
         {
@@ -39,9 +48,18 @@ public class TabletButtonEventHandler : MonoBehaviour
     public void ResetButton()
     {
         buttonTMP.text = "";
-        toggle.enabled = true;
+        toggle.enabled = false;
         toggle.isOn = false;
         gameName = IndividualGameName.Null;
+    }
+
+    public void SetUpButton(TabletButtonInfo data)
+    {
+        gameName = data.gameName;
+        buttonTMP.text = data.buttonText;
+        instructionText = data.instructionText;
+        instructionVideo = data.instructionVideo;
+        audioClip = data.audio;
     }
 
     public bool CheckIfToggleOn()
@@ -59,19 +77,8 @@ public class TabletButtonEventHandler : MonoBehaviour
         toggle.isOn = true;
     }
 
-    public void SetButtonText(string txt)
-    {
-        buttonTMP.text = txt;
-    }
-
-    public void SetInstructionText(string txt)
-    {
-        instructionText = txt;
-    }
-
     public void SetDisabled()
     {
-        toggle.isOn = false; // TODO: this did not work?
         toggle.enabled = false;
     }
 
@@ -80,18 +87,17 @@ public class TabletButtonEventHandler : MonoBehaviour
         toggle.enabled = true;
     }
 
-    public void LinkToGame(IndividualGameName name)
-    {
-        gameName = name;
-    }
-
-    public void UnlinkToGame()
-    {
-        gameName = IndividualGameName.Null;
-    }
-
     public IndividualGameName GetCurrentGameName()
     {
         return gameName;
     }
+}
+
+public class TabletButtonInfo
+{
+    public IndividualGameName gameName;
+    public string buttonText;
+    public string instructionText;
+    public VideoClip instructionVideo;
+    public AudioClip audio;
 }

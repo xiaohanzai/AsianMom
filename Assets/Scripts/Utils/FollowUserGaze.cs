@@ -19,6 +19,12 @@ public class FollowUserGaze : MonoBehaviour
 
     private Transform m_cameraTransform;
 
+    [SerializeField] private float timeToTurnOffTracking;
+    private float timer;
+
+    [Header("Listening to")]
+    [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
+
     private void Awake()
     {
         if (m_uiElement == null)
@@ -27,7 +33,23 @@ public class FollowUserGaze : MonoBehaviour
         }
     }
 
-    private void Update() => UpdatePosition();
+    private void Start()
+    {
+        levelFailedEventChannel.OnEventRaised += ResetTimer;
+    }
+
+    private void OnDestroy()
+    {
+        levelFailedEventChannel.OnEventRaised -= ResetTimer;
+    }
+
+    private void Update()
+    {
+        if (timer > timeToTurnOffTracking) return;
+
+        UpdatePosition();
+        timer += Time.deltaTime;
+    }
 
     private void OnEnable()
     {
@@ -55,6 +77,11 @@ public class FollowUserGaze : MonoBehaviour
         }
     }
 #endif
+
+    private void ResetTimer()
+    {
+        timer = 0;
+    }
 
     private void UpdatePosition()
     {

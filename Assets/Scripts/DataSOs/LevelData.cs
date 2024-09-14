@@ -12,6 +12,8 @@ public class LevelData : ScriptableObject
     public float timeIntervalMin; // minimum time interval when reaching maxRounds of spawning mom
     public float waitTime; // amount of time that mom spends in room
     public int nRounds; // maximum rounds of mom coming in
+    public AudioClip momWalkOutAudio;
+    public AudioClip bgm;
 
     public List<IndividualGameData> GetGameDataList()
     {

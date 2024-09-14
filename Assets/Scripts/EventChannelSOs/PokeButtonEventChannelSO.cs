@@ -44,4 +44,5 @@ public enum PokeButtonType
     StartLevel,
     Quit,
     PlayAgain,
+    TryAgain,
 }

@@ -17,3 +17,5 @@ MonoBehaviour:
     type: 3}
   buttonText: Play Whack A Mole
   instructionText: Use the hammer to kill the moles on your floor
+  instructionVideo: {fileID: 32900000, guid: 95473756f71f3422f8f3c3739d8b622d, type: 3}
+  audio: {fileID: 0}

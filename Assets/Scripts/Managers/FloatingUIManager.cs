@@ -10,20 +10,29 @@ public class FloatingUIManager : MonoBehaviour
 
     [Header("Shuffle Environment UI")]
     [SerializeField] private GameObject shuffleEnvironmentUI;
-    [SerializeField] private GameObject shuffleEnvironmentButton;
-    [SerializeField] private GameObject confirmEnvironmentButton;
+    [SerializeField] private GameObject shuffleEnvironmentButtonsParent;
+
+    [Header("Level Failed UI")]
+    [SerializeField] private float waitTimeToShowLevelFailedUI;
+    [SerializeField] private GameObject levelFailedUI;
+    [SerializeField] private GameObject levelFailedButtonsParent;
 
     [Header("Listening to")]
     [SerializeField] private PokeButtonEventChannelSO pokeButtonEventChannel;
+    [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
 
     private void Start()
     {
         //SetPosition();
         HideShuffleEnvironmentUIAndButtons();
+        HideLevelFailedUIAndButtons();
 
         pokeButtonEventChannel.OnEventRaised += HideLogoUIAndButtons;
         pokeButtonEventChannel.OnEventRaised += ShowShuffleEnvironmentUIAndButtons;
         pokeButtonEventChannel.OnEventRaised += HideShuffleEnvironmentUIAndButtons;
+        pokeButtonEventChannel.OnEventRaised += HideLevelFailedUIAndButtons;
+
+        levelFailedEventChannel.OnEventRaised += DelayedShowLevelFailedUIAndButtons;
     }
 
     private void OnDestroy()
@@ -31,15 +40,17 @@ public class FloatingUIManager : MonoBehaviour
         pokeButtonEventChannel.OnEventRaised -= HideLogoUIAndButtons;
         pokeButtonEventChannel.OnEventRaised -= ShowShuffleEnvironmentUIAndButtons;
         pokeButtonEventChannel.OnEventRaised -= HideShuffleEnvironmentUIAndButtons;
+        pokeButtonEventChannel.OnEventRaised -= HideLevelFailedUIAndButtons;
+        levelFailedEventChannel.OnEventRaised -= DelayedShowLevelFailedUIAndButtons;
     }
 
-    private void SetPosition()
-    {
-        transform.position = Camera.main.transform.position + Camera.main.transform.forward * 0.7f;
-        transform.LookAt(Camera.main.transform);
-        transform.rotation *= Quaternion.Euler(0, 180, 0);
-        transform.position += Vector3.up * 1.4f;
-    }
+    //private void SetPosition()
+    //{
+    //    transform.position = Camera.main.transform.position + Camera.main.transform.forward * 0.7f;
+    //    transform.LookAt(Camera.main.transform);
+    //    transform.rotation *= Quaternion.Euler(0, 180, 0);
+    //    transform.position += Vector3.up * 1.4f;
+    //}
 
     private void HideLogoUIAndButtons(PokeButtonType type)
     {
@@ -54,8 +65,7 @@ public class FloatingUIManager : MonoBehaviour
     private void HideShuffleEnvironmentUIAndButtons()
     {
         shuffleEnvironmentUI.SetActive(false);
-        shuffleEnvironmentButton.SetActive(false);
-        confirmEnvironmentButton.SetActive(false);
+        shuffleEnvironmentButtonsParent.SetActive(false);
     }
 
     private void ShowShuffleEnvironmentUIAndButtons(PokeButtonType type)
@@ -65,8 +75,7 @@ public class FloatingUIManager : MonoBehaviour
             return;
         }
         shuffleEnvironmentUI.SetActive(true);
-        shuffleEnvironmentButton.SetActive(true);
-        confirmEnvironmentButton.SetActive(true);
+        shuffleEnvironmentButtonsParent.SetActive(true);
     }
 
     private void HideShuffleEnvironmentUIAndButtons(PokeButtonType type)
@@ -76,5 +85,28 @@ public class FloatingUIManager : MonoBehaviour
             return;
         }
         HideShuffleEnvironmentUIAndButtons();
+    }
+
+    private void DelayedShowLevelFailedUIAndButtons()
+    {
+        Invoke("ShowLevelFailedUIAndButtons", waitTimeToShowLevelFailedUI);
+    }
+
+    private void ShowLevelFailedUIAndButtons()
+    {
+        levelFailedUI.SetActive(true);
+        levelFailedButtonsParent.SetActive(true);
+    }
+
+    private void HideLevelFailedUIAndButtons()
+    {
+        levelFailedUI.SetActive(false);
+        levelFailedButtonsParent.SetActive(false);
+    }
+
+    private void HideLevelFailedUIAndButtons(PokeButtonType type)
+    {
+        if (type != PokeButtonType.TryAgain) return;
+        HideLevelFailedUIAndButtons();
     }
 }

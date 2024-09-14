@@ -16,9 +16,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 33fd95912779246a3b6bd53c60ec3746, type: 2}
   - {fileID: 11400000, guid: f6879273c8d4340a89e701cafff04422, type: 2}
   - {fileID: 11400000, guid: 61d46dfc4df1e46dda595e3d31468f17, type: 2}
+  - {fileID: 11400000, guid: dceca0e1dd11b4c60b0cbf321fae7620, type: 2}
   instructionText: Mom is suspicious that you are not studying.  Complete the goof-off
     activities before mom's suspicion level reaches maximum!
-  timeIntervalMax: 45
-  timeIntervalMin: 45
+  timeIntervalMax: 40
+  timeIntervalMin: 40
   waitTime: 5
   nRounds: 3
+  momWalkOutAudio: {fileID: 8300000, guid: 788906da645a9421daba6633403149f4, type: 3}
+  bgm: {fileID: 8300000, guid: eea237679331343c69b27d6688b6bac3, type: 3}

@@ -64,6 +64,11 @@ namespace Mom
             walkingAudio.Play();
 
             isDestReached = false;
+
+            if (!isWalkingIn)
+            {
+                _controller.GetAudio(MomStateName.WalkOut).Play();
+            }
         }
 
         public override void ExitState()

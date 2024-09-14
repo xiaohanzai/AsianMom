@@ -181,10 +181,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonTMP: {fileID: 628527929574455929}
   toggle: {fileID: 628527928350691898}
-  instructionTMP: {fileID: 0}
   gameStartEventChannel: {fileID: 11400000, guid: 2256128526c8a445f9e6a9f5e718a719,
     type: 2}
-  setInstructionTextEventChannel: {fileID: 11400000, guid: 9747f4a1fe42c434fbb5711e2352e501,
+  uIInstructionEventChannel: {fileID: 11400000, guid: 22f3f0c08db86476d9ae460f98effd4d,
+    type: 2}
+  deskAudioEventChannel: {fileID: 11400000, guid: 2206915f938a64cbc8e3e2af51eff8a8,
     type: 2}
 --- !u!1 &628527929574455931
 GameObject:

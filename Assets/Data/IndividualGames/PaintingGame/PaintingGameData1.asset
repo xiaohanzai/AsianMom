@@ -18,3 +18,5 @@ MonoBehaviour:
   buttonText: Color A Painting
   instructionText: Color the painting behind you correctly according to the pattern
     shown on top of it
+  instructionVideo: {fileID: 32900000, guid: dda5f98e2ae0f468cb457abf6779ff45, type: 3}
+  audio: {fileID: 0}

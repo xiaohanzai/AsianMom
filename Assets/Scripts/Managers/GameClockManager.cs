@@ -12,7 +12,7 @@ public class GameClockManager : MonoBehaviour
     [SerializeField] private VoidEventChannelSO timeUpEventChannel;
 
     [Header("Listening to")]
-    [SerializeField] private VoidEventChannelSO levelStartEventChannel;
+    [SerializeField] private VoidEventChannelSO timerStartEventChannel;
     [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
     [SerializeField] private FloatEventChannelSO setTimeIntervalEventChannel;
 
@@ -21,14 +21,14 @@ public class GameClockManager : MonoBehaviour
         SetTimerStop();
 
         setTimeIntervalEventChannel.OnEventRaised += SetTimeInterval;
-        levelStartEventChannel.OnEventRaised += SetTimerStart;
+        timerStartEventChannel.OnEventRaised += SetTimerStart;
         levelCompleteEventChannel.OnEventRaised += SetTimerStop;
     }
 
     private void OnDestroy()
     {
         setTimeIntervalEventChannel.OnEventRaised -= SetTimeInterval;
-        levelStartEventChannel.OnEventRaised -= SetTimerStart;
+        timerStartEventChannel.OnEventRaised -= SetTimerStart;
         levelCompleteEventChannel.OnEventRaised -= SetTimerStop;
     }
 
@@ -45,7 +45,7 @@ public class GameClockManager : MonoBehaviour
     private void SetTimerStart()
     {
         timer = 0;
-        Debug.Log("restarted");
+        Debug.Log("timer started");
     }
 
     private void SetTimerStop()

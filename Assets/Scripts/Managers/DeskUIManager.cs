@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 using TMPro;
 
 public class DeskUIManager : MonoBehaviour
 {
     [Header("Instruction UI")]
     [SerializeField] private TextMeshProUGUI instructionTMP;
+
+    [Header("Individual Game UI")]
+    [SerializeField] private GameObject individualGameUIParent;
+    [SerializeField] private TextMeshProUGUI individualGameTMP;
+    [SerializeField] private VideoPlayer individualGameVideoPlayer;
 
     [Header("Watch Out UI")]
     [SerializeField] private GameObject watchOutUI;
@@ -20,10 +26,6 @@ public class DeskUIManager : MonoBehaviour
     [Header("Level Start UI")]
     [SerializeField] private GameObject levelStartButton;
 
-    [Header("Level Failed UI")]
-    [SerializeField] private GameObject levelFailedUI;
-    [SerializeField] private GameObject tryAgainButton;
-
     [Header("Level Complete UI")]
     [SerializeField] private GameObject levelCompleteUI;
 
@@ -32,16 +34,12 @@ public class DeskUIManager : MonoBehaviour
     [SerializeField] private GameObject quitButton;
     [SerializeField] private GameObject playAgainButton;
 
-    [Header("Audios")]
-    [SerializeField] private AudioSource computerStartAudio;
-    [SerializeField] private AudioSource alarmAudio;
-
     [Header("Listening to")]
     [SerializeField] private PokeButtonEventChannelSO pokeButtonEventChannel;
     [SerializeField] private TextEventChannelSO setInstructionTextEventChannel;
+    [SerializeField] private UIInstructionEventChannelSO uIInstructionEventChannel;
     [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
     [SerializeField] private VoidEventChannelSO levelStartEventChannel;
-    [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
     [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
     [SerializeField] private VoidEventChannelSO allLevelsCompleteEventChannel;
     [SerializeField] private VoidEventChannelSO spawnMomEventChannel;
@@ -55,17 +53,17 @@ public class DeskUIManager : MonoBehaviour
         pokeButtonEventChannel.OnEventRaised += HideAllLevelsCompleteUIAndBtn;
 
         setInstructionTextEventChannel.OnEventRaised += SetInstructionText;
+        uIInstructionEventChannel.OnEventRaised += SetindividualGameTextAndVideo;
 
-        levelLoadEventChannel.OnEventRaised += ShowLevelStartBtn;
+        levelLoadEventChannel.OnEventRaised += ShowLevelStartUIAndBtn;
         levelLoadEventChannel.OnEventRaised += HideLevel1LoadUIAndBtn;
-        levelLoadEventChannel.OnEventRaised += HideLevelFailedUIAndBtn;
         levelLoadEventChannel.OnEventRaised += HideLevelCompleteUIAndBtn;
+        levelLoadEventChannel.OnEventRaised += HideIndividualGameUI;
 
-        levelStartEventChannel.OnEventRaised += HideLevelStartBtn;
-
-        levelFailedEventChannel.OnEventRaised += ShowLevelFailedUIAndBtn;
+        levelStartEventChannel.OnEventRaised += HideLevelStartUIAndBtn;
 
         levelCompleteEventChannel.OnEventRaised += ShowLevelCompleteUIAndBtn;
+        levelCompleteEventChannel.OnEventRaised += HideIndividualGameUI;
 
         allLevelsCompleteEventChannel.OnEventRaised += ShowAllLevelsCompleteUIAndBtn;
 
@@ -78,17 +76,17 @@ public class DeskUIManager : MonoBehaviour
         pokeButtonEventChannel.OnEventRaised -= HideAllLevelsCompleteUIAndBtn;
 
         setInstructionTextEventChannel.OnEventRaised -= SetInstructionText;
+        uIInstructionEventChannel.OnEventRaised -= SetindividualGameTextAndVideo;
 
-        levelLoadEventChannel.OnEventRaised -= ShowLevelStartBtn;
+        levelLoadEventChannel.OnEventRaised -= ShowLevelStartUIAndBtn;
         levelLoadEventChannel.OnEventRaised -= HideLevel1LoadUIAndBtn;
-        levelLoadEventChannel.OnEventRaised -= HideLevelFailedUIAndBtn;
         levelLoadEventChannel.OnEventRaised -= HideLevelCompleteUIAndBtn;
+        levelLoadEventChannel.OnEventRaised -= HideIndividualGameUI;
 
-        levelStartEventChannel.OnEventRaised -= HideLevelStartBtn;
-
-        levelFailedEventChannel.OnEventRaised -= ShowLevelFailedUIAndBtn;
+        levelStartEventChannel.OnEventRaised -= HideLevelStartUIAndBtn;
 
         levelCompleteEventChannel.OnEventRaised -= ShowLevelCompleteUIAndBtn;
+        levelCompleteEventChannel.OnEventRaised -= HideIndividualGameUI;
 
         allLevelsCompleteEventChannel.OnEventRaised -= ShowAllLevelsCompleteUIAndBtn;
 
@@ -97,45 +95,63 @@ public class DeskUIManager : MonoBehaviour
 
     private void HideAllUI()
     {
-        ResetInstructionText();
         HideLevelCompleteUIAndBtn();
-        HideLevelFailedUIAndBtn();
         HideLevel1LoadUIAndBtn();
-        HideLevelStartBtn();
+        HideLevelStartUIAndBtn();
         HideWatchOutPanel();
         HideAllLevelsCompleteUIAndBtn();
+        HideIndividualGameUI();
     }
 
-    private void SetInstructionText(string t)
+    private void SetindividualGameTextAndVideo(UIInstruction data)
     {
-        instructionTMP.text = t;
+        ShowIndividualGameUI();
+        individualGameTMP.text = data.text;
+        individualGameVideoPlayer.clip = data.video;
+        individualGameVideoPlayer.Play();
+    }
+
+    private void ShowIndividualGameUI()
+    {
+        individualGameUIParent.SetActive(true);
+    }
+
+    private void HideIndividualGameUI()
+    {
+        individualGameVideoPlayer.Stop();
+        individualGameUIParent.SetActive(false);
+    }
+
+    private void SetInstructionText(string text)
+    {
+        instructionTMP.text = text;
     }
 
     private void ResetInstructionText()
     {
-        SetInstructionText("");
+        instructionTMP.text = "";
     }
 
     private void ShowWatchOutPanel()
     {
         watchOutUI.SetActive(true);
-        alarmAudio.Play();
         Invoke("HideWatchOutPanel", watchOutPanelWaitTime);
     }
 
     private void HideWatchOutPanel()
     {
         watchOutUI.SetActive(false);
-        alarmAudio.Stop();
     }
 
-    private void ShowLevelStartBtn()
+    private void ShowLevelStartUIAndBtn()
     {
+        instructionTMP.gameObject.SetActive(true);
         levelStartButton.SetActive(true);
     }
 
-    private void HideLevelStartBtn()
+    private void HideLevelStartUIAndBtn()
     {
+        instructionTMP.gameObject.SetActive(false);
         levelStartButton.SetActive(false);
     }
 
@@ -149,7 +165,6 @@ public class DeskUIManager : MonoBehaviour
         if (type != PokeButtonType.ConfirmEnvironment) return;
         level1LoadButton.SetActive(true);
         level1LoadUI.SetActive(true);
-        computerStartAudio.Play();
     }
 
     private void HideLevel1LoadUIAndBtn()
@@ -158,30 +173,14 @@ public class DeskUIManager : MonoBehaviour
         level1LoadUI.SetActive(false);
     }
 
-    private void ShowLevelFailedUIAndBtn()
-    {
-        instructionTMP.gameObject.SetActive(false);
-        levelFailedUI.SetActive(true);
-        tryAgainButton.SetActive(true);
-    }
-
-    private void HideLevelFailedUIAndBtn()
-    {
-        instructionTMP.gameObject.SetActive(true);
-        levelFailedUI.SetActive(false);
-        tryAgainButton.SetActive(false);
-    }
-
     private void ShowLevelCompleteUIAndBtn()
     {
-        instructionTMP.gameObject.SetActive(false);
         levelCompleteUI.SetActive(true);
         nextLevelButton.SetActive(true);
     }
 
     private void HideLevelCompleteUIAndBtn()
     {
-        instructionTMP.gameObject.SetActive(true);
         levelCompleteUI.SetActive(false);
         nextLevelButton.SetActive(false);
     }

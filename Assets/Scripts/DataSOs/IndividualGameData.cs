@@ -1,22 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 [CreateAssetMenu(fileName = "NewGameData", menuName = "Data/Individual Games/Individual Game Data")]
 public class IndividualGameData : ScriptableObject
 {
-    [SerializeField] private IndividualGameName gameName;
-    [SerializeField] private GameObject gamePrefab;
-    [SerializeField] private string buttonText;
-    [SerializeField] private string instructionText;
-
-    public void GetAllFields(out IndividualGameName name, out GameObject prefab, out string btnText, out string instrText)
-    {
-        name = gameName;
-        prefab = gamePrefab;
-        btnText = buttonText;
-        instrText = instructionText;
-    }
+    public IndividualGameName gameName;
+    public GameObject gamePrefab;
+    public string buttonText;
+    public string instructionText;
+    public VideoClip instructionVideo;
+    public AudioClip audio;
 }
 
 public enum IndividualGameName
