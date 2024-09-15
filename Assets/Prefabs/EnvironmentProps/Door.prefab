@@ -475,6 +475,8 @@ MonoBehaviour:
     type: 2}
   momWalkOutAudioEventChannel: {fileID: 11400000, guid: 25fef94bb4c76433895bbce05f41d213,
     type: 2}
+  momAngryAudioEventChannel: {fileID: 11400000, guid: d10dedb037fc948f29b9d11e53d4797d,
+    type: 2}
   checkIndividualGamesEventChannel: {fileID: 11400000, guid: 3c149b9fffd804c75aa178f002d1b11b,
     type: 2}
   setNextRoundParamsEventChannel: {fileID: 11400000, guid: 55d1f0928ee384a198e462d5b7e00cc4,

@@ -16,5 +16,7 @@ MonoBehaviour:
   gamePrefab: {fileID: 2567348308807633250, guid: e747b4f746dc34b5ebdb0f1e57899c70,
     type: 3}
   buttonText: Play Xylophone
-  instructionText: Play Dancing Bear following the music notations on top of the
-    xylophone behind you
+  instructionText: Play Twinkle Little Star following the music notations on top
+    of the xylophone behind you
+  instructionVideo: {fileID: 32900000, guid: be3d49c38c56c4a3e95051d9ed387b9c, type: 3}
+  audio: {fileID: 0}

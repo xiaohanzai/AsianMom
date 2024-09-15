@@ -13,6 +13,7 @@ public class LevelData : ScriptableObject
     public float waitTime; // amount of time that mom spends in room
     public int nRounds; // maximum rounds of mom coming in
     public AudioClip momWalkOutAudio;
+    public AudioClip momAngryAudio;
     public AudioClip bgm;
 
     public List<IndividualGameData> GetGameDataList()

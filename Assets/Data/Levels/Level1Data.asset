@@ -21,9 +21,10 @@ MonoBehaviour:
     Complete all the goof-off activities to pass this level, but do not get discovered
     by mom!  Mom will come check in with you every once in a while!  Click on each
     game on tablet to play
-  timeIntervalMax: 40
-  timeIntervalMin: 40
+  timeIntervalMax: 35
+  timeIntervalMin: 35
   waitTime: 5
   nRounds: 1000
   momWalkOutAudio: {fileID: 8300000, guid: 20bfeb9f4f4334fcd84fd973da83db27, type: 3}
+  momAngryAudio: {fileID: 8300000, guid: 4fb2d07b1974d4394a248ba9707a859f, type: 3}
   bgm: {fileID: 8300000, guid: 885711654b49a4e7c9a80658d02f1158, type: 3}

@@ -27,6 +27,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private TransformEventChannelSO setPropLocEventChannel;
     [SerializeField] private TextEventChannelSO setInstructionTextEventChannel;
     [SerializeField] private AudioEventChannelSO setMomWalkOutAudioEventChannel;
+    [SerializeField] private AudioEventChannelSO setMomAngryAudioEventChannel;
     [SerializeField] private SpawnMomParametersEventChannelSO setSpawnMomParametersEventChannel;
 
     private class InternalGameData
@@ -146,6 +147,7 @@ public class LevelManager : MonoBehaviour
         setPropLocEventChannel.RaiseEvent(propInstantiationLoc);
         setInstructionTextEventChannel.RaiseEvent(levelDatas[level - 1].instructionText);
         setMomWalkOutAudioEventChannel.RaiseEvent(levelDatas[level - 1].momWalkOutAudio);
+        setMomAngryAudioEventChannel.RaiseEvent(levelDatas[level - 1].momAngryAudio);
         levelLoadEventChannel.RaiseEvent();
     }
 
@@ -230,9 +232,17 @@ public class LevelManager : MonoBehaviour
 
     private void CheckIfAnyGameIsOn(bool b)
     {
+        if (isLevelComplete) return;
         // if b == false, don't check just fail this level
         // only need to check if the cancel button is toggled on
         if (!b || !availableButtons[nGame].CheckIfToggleOn())
+        {
+            ClearSpawnedGames();
+            foreach (var item in availableButtons)
+            {
+                item.ResetButton();
+            }
             levelFailedEventChannel.RaiseEvent();
+        }
     }
 }

@@ -18,3 +18,5 @@ MonoBehaviour:
   buttonText: Catch Ladybugs
   instructionText: Catch the ladybugs falling from the ceiling; get 50% of them to
     win
+  instructionVideo: {fileID: 32900000, guid: c79c3a74721a2486ea5a9b4879cc8e09, type: 3}
+  audio: {fileID: 0}

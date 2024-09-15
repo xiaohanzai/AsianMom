@@ -18,3 +18,5 @@ MonoBehaviour:
   buttonText: Shoot Flies in Room
   instructionText: Shoot all the flies in your room with the spray; kill them all
     to win
+  instructionVideo: {fileID: 32900000, guid: b94f815d53335457399967ccba98ba24, type: 3}
+  audio: {fileID: 0}

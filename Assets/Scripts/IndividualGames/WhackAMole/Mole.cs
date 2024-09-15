@@ -75,7 +75,6 @@ namespace WhackAMole
         {
             popState = PopState.MoveUp;
             popUpAudio.Play();
-            moleCollider.gameObject.SetActive(true);
             timer = 0;
         }
 
@@ -130,6 +129,7 @@ namespace WhackAMole
                 popState = PopState.Wait;
                 timer = waitTime;
             }
+            if (timer / moveTime > 0.2f) moleCollider.gameObject.SetActive(true);
         }
 
         private void Wait()
@@ -152,6 +152,7 @@ namespace WhackAMole
             {
                 popState = PopState.Hidden;
             }
+            if ((timer - moveTime - waitTime) / moveTime > 0.8f) moleCollider.gameObject.SetActive(false);
         }
     }
 }

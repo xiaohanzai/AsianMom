@@ -1341,6 +1341,8 @@ MonoBehaviour:
     type: 2}
   setMomWalkOutAudioEventChannel: {fileID: 11400000, guid: 25fef94bb4c76433895bbce05f41d213,
     type: 2}
+  setMomAngryAudioEventChannel: {fileID: 11400000, guid: d10dedb037fc948f29b9d11e53d4797d,
+    type: 2}
   setSpawnMomParametersEventChannel: {fileID: 11400000, guid: 1c5a7b086e8a24d46a23efe95b7f021e,
     type: 2}
 --- !u!114 &6462539798281092544
@@ -1714,7 +1716,8 @@ AudioSource:
   m_GameObject: {fileID: 3365854138484732650}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -1913994310150215321, guid: 29f9aad892b244381acd37ace1caf9c3,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: e8331245c7bbf4df2b94e28de161d703, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -2798,7 +2801,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6413914063543536874
 RectTransform:
   m_ObjectHideFlags: 0

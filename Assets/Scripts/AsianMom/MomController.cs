@@ -43,6 +43,7 @@ namespace Mom
         [SerializeField] private FloatEventChannelSO setWaitTimeEventChannel;
         [SerializeField] private IntEventChannelSO setNRoundsEventChannel;
         [SerializeField] private AudioEventChannelSO momWalkOutAudioEventChannel;
+        [SerializeField] private AudioEventChannelSO momAngryAudioEventChannel;
 
         [Header("Broadcasting on")]
         [SerializeField] private BoolEventChannelSO checkIndividualGamesEventChannel;
@@ -52,7 +53,7 @@ namespace Mom
         [SerializeField] private VoidEventChannelSO timerStartEventChannel;
 
         private BaseState currentState;
-        private MomStateName currentStateName;
+        //private MomStateName currentStateName;
 
         private float waitTime;
 
@@ -68,6 +69,7 @@ namespace Mom
             setWaitTimeEventChannel.OnEventRaised += SetWaitTime;
             setNRoundsEventChannel.OnEventRaised += SetNRounds;
             momWalkOutAudioEventChannel.OnEventRaised += SetWalkOutAudio;
+            momAngryAudioEventChannel.OnEventRaised += SetAngryAudio;
         }
 
         private void OnDestroy()
@@ -79,6 +81,7 @@ namespace Mom
             setWaitTimeEventChannel.OnEventRaised -= SetWaitTime;
             setNRoundsEventChannel.OnEventRaised -= SetNRounds;
             momWalkOutAudioEventChannel.OnEventRaised -= SetWalkOutAudio;
+            momAngryAudioEventChannel.OnEventRaised -= SetAngryAudio;
         }
 
         private void Update()
@@ -91,7 +94,7 @@ namespace Mom
 
         private void ChangeState(MomStateName stateName)
         {
-            if (currentState != null && currentStateName == stateName) return;
+            //if (currentState != null && currentStateName == stateName) return;
 
             BaseState newState = null;
             switch (stateName)
@@ -115,7 +118,7 @@ namespace Mom
                 default:
                     break;
             }
-            currentStateName = stateName;
+            //currentStateName = stateName;
             if (currentState != null)
                 currentState.ExitState();
             currentState = newState;
@@ -241,6 +244,11 @@ namespace Mom
         private void SetWalkOutAudio(AudioClip audio)
         {
             walkOutAudio.clip = audio;
+        }
+
+        private void SetAngryAudio(AudioClip audio)
+        {
+            angryAudio.clip = audio;
         }
 
         public AudioSource GetDoorAudio(bool doorOpen)

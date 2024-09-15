@@ -24,4 +24,5 @@ MonoBehaviour:
   waitTime: 5
   nRounds: 4
   momWalkOutAudio: {fileID: 8300000, guid: 66ff7f815050d49d28321c6fa1b5ba29, type: 3}
+  momAngryAudio: {fileID: 8300000, guid: e1614645b85b04980a216f3df2a3aaec, type: 3}
   bgm: {fileID: 8300000, guid: 7e034d46e5cd644539c166e6f840e6ce, type: 3}
