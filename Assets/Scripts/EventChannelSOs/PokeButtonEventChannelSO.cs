@@ -7,23 +7,42 @@ using UnityEngine.Events;
 public class PokeButtonEventChannelSO : DescriptionSO
 {
     [Tooltip("The action to perform")]
-    public UnityAction<PokeButtonData> OnEventRaised;
+    public UnityAction<PokeButtonType> OnEventRaised;
 
-    public void RaiseEvent(PokeButtonData data)
+    public void RaiseEvent(PokeButtonType data)
     {
+        //// for debugging
+        //if (data == PokeButtonType.PlayWhackAMole)
+        //{
+        //    TabletButtonEventHandler[] tabletButtonEventHandlers = FindObjectsOfType<TabletButtonEventHandler>();
+        //    foreach (var handler in tabletButtonEventHandlers)
+        //    {
+        //        if (handler.GetCurrentGameName() == IndividualGameName.WhackAMole)
+        //        {
+        //            handler.StartGame(true);
+        //        }
+        //    }
+        //    return;
+        //}
+
         if (OnEventRaised != null)
             OnEventRaised.Invoke(data);
     }
 }
 
-public class PokeButtonData
-{
-    public PokeButtonType pokeButtonType;
-}
+//public class PokeButtonData
+//{
+//    public PokeButtonType pokeButtonType;
+//}
 
 public enum PokeButtonType
 {
     StartGame,
     ShuffleEnvironment,
-    ConfirmEnvironment
+    ConfirmEnvironment,
+    LoadLevel,
+    StartLevel,
+    Quit,
+    PlayAgain,
+    TryAgain,
 }

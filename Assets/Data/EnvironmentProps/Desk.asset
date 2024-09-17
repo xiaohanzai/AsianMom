@@ -12,16 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbea64f9ff6949ceaaa38fcb984f9ae, type: 3}
   m_Name: Desk
   m_EditorClassIdentifier: 
-  SpawnObject: {fileID: 2435484044891527405, guid: ea6bd370bcaab43dc8f1e293222cfb0f,
-    type: 3}
-  SpawnAmount: 1
-  MaxIterations: 1000
-  CheckForNonPropCollision: 1
-  SpawnLocations: 5
-  Labels: 4
-  CheckOverlaps: 1
-  OverrideBounds: -1
-  LayerMask:
-    serializedVersion: 2
-    m_Bits: 65
-  SurfaceClearanceDistance: 0.5
+  prefab: {fileID: 2435484044891527405, guid: ea6bd370bcaab43dc8f1e293222cfb0f, type: 3}
+  spawnAmount: 1
+  maxIterations: 100
+  minRadius: 0.5
+  spawnLocation: 0
+  labels: 32869
+  visualizationColor: {r: 1, g: 0, b: 0, a: 1}

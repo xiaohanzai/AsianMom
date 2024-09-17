@@ -12,16 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbea64f9ff6949ceaaa38fcb984f9ae, type: 3}
   m_Name: Door
   m_EditorClassIdentifier: 
-  SpawnObject: {fileID: 1961640965264807028, guid: ed0ac519a64b4427890b49bc595cca34,
-    type: 3}
-  SpawnAmount: 1
-  MaxIterations: 1000
-  CheckForNonPropCollision: 1
-  SpawnLocations: 5
-  Labels: 4
-  CheckOverlaps: 1
-  OverrideBounds: -1
-  LayerMask:
-    serializedVersion: 2
-    m_Bits: 65
-  SurfaceClearanceDistance: 0.2
+  prefab: {fileID: 1961640965264807028, guid: ed0ac519a64b4427890b49bc595cca34, type: 3}
+  spawnAmount: 1
+  maxIterations: 100
+  minRadius: 0.5
+  spawnLocation: 0
+  labels: 32869
+  visualizationColor: {r: 1, g: 0, b: 0, a: 1}

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8078c5b0c55ab42ff97eea798233d6ea, type: 3}
+  m_Name: Level1Data
+  m_EditorClassIdentifier: 
+  gameDataList:
+  - {fileID: 11400000, guid: 1ac49b622cf4d4cf1b1a7a904d5bcad0, type: 2}
+  - {fileID: 11400000, guid: d8bee8e2497374e35830e7e229ff3800, type: 2}
+  - {fileID: 11400000, guid: 61d46dfc4df1e46dda595e3d31468f17, type: 2}
+  - {fileID: 11400000, guid: dceca0e1dd11b4c60b0cbf321fae7620, type: 2}
+  instructionText: Your Asian mom wants you to study, but you don't want to study. 
+    Complete all the goof-off activities to pass this level, but do not get discovered
+    by mom!  Mom will come check in with you every once in a while!  Click on each
+    game on tablet to play
+  timeIntervalMax: 35
+  timeIntervalMin: 35
+  waitTime: 5
+  nRounds: 1000
+  momWalkOutAudio: {fileID: 8300000, guid: 20bfeb9f4f4334fcd84fd973da83db27, type: 3}
+  momAngryAudio: {fileID: 8300000, guid: 4fb2d07b1974d4394a248ba9707a859f, type: 3}
+  bgm: {fileID: 8300000, guid: 885711654b49a4e7c9a80658d02f1158, type: 3}
