@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using UnityEngine.Video;
 
 public class TabletButtonEventHandler : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI buttonTMP;
-    [SerializeField] private Toggle toggle;
+    [SerializeField] private TextMeshPro buttonTMP;
+    [SerializeField] private MeshRenderer meshRenderer;
 
     private IndividualGameName gameName;
     private string instructionText;
@@ -20,15 +19,27 @@ public class TabletButtonEventHandler : MonoBehaviour
     [SerializeField] private UIInstructionEventChannelSO uIInstructionEventChannel;
     [SerializeField] private AudioEventChannelSO deskAudioEventChannel;
 
-    private void Start()
+    private TabletButtonToggleGroup tabletButtonToggleGroup;
+
+    private Color originalColor;
+    private Color selectedColor;
+    private Color disabledColor;
+
+    [SerializeField] private bool isToggledOn;
+    [SerializeField] private bool isEnabled;
+
+    public void LinkToToggleGroup(TabletButtonToggleGroup group)
     {
-        ResetButton();
-        SetDisabled();
+        tabletButtonToggleGroup = group;
+        var (oc, sc, dc) = group.GetColors();
+        originalColor = oc;
+        selectedColor = sc;
+        disabledColor = dc;
     }
 
-    public void StartGame(bool start)
+    public void RaiseEvent()
     {
-        if (start)
+        if (!isToggledOn && isEnabled)
         {
             gameStartEventChannel.RaiseEvent(gameName);
             UIInstruction data = new UIInstruction
@@ -38,18 +49,16 @@ public class TabletButtonEventHandler : MonoBehaviour
             };
             uIInstructionEventChannel.RaiseEvent(data);
             deskAudioEventChannel.RaiseEvent(audioClip);
-        }
-        else
-        {
-
+            tabletButtonToggleGroup.SetCurrentButton(this);
+            isToggledOn = true;
         }
     }
 
     public void ResetButton()
     {
         buttonTMP.text = "";
-        toggle.enabled = false;
-        toggle.isOn = false;
+        isEnabled = false;
+        isToggledOn = false;
         gameName = IndividualGameName.Null;
     }
 
@@ -64,27 +73,31 @@ public class TabletButtonEventHandler : MonoBehaviour
 
     public bool CheckIfToggleOn()
     {
-        return toggle.isOn;
+        return isToggledOn;
     }
 
     public void SetToggleOff()
     {
-        toggle.isOn = false;
+        isToggledOn = false;
+        meshRenderer.material.color = originalColor;
     }
 
     public void SetToggleOn()
     {
-        toggle.isOn = true;
+        isToggledOn = true;
+        meshRenderer.material.color = selectedColor;
     }
 
     public void SetDisabled()
     {
-        toggle.enabled = false;
+        isEnabled = false;
+        meshRenderer.material.color = disabledColor;
     }
 
     public void SetEnabled()
     {
-        toggle.enabled = true;
+        isEnabled = true;
+        meshRenderer.material.color = originalColor;
     }
 
     public IndividualGameName GetCurrentGameName()

@@ -5,7 +5,9 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] private List<LevelData> levelDatas; // levelDatas[i] is the LevelData for level i+1
-    [SerializeField] private List<TabletButtonEventHandler> availableButtons; // tablet buttons
+
+    [SerializeField] private TabletButtonToggleGroup tabletButtonGroup;
+    private List<TabletButtonEventHandler> availableButtons; // tablet buttons
 
     [SerializeField] private Transform propInstantiationLoc; // where do you want new props e.g. hammer to appear
 
@@ -46,6 +48,8 @@ public class LevelManager : MonoBehaviour
         pokeButtonEventChannel.OnEventRaised += QuitGame;
         gameCompleteEventChannel.OnEventRaised += DelayedDisableGame;
         checkIndividualGamesEventChannel.OnEventRaised += CheckIfAnyGameIsOn;
+
+        availableButtons = tabletButtonGroup.GetAllButtons();
     }
 
     private void OnDestroy()
@@ -73,10 +77,7 @@ public class LevelManager : MonoBehaviour
         isLevelComplete = true;
         levelCompleteEventChannel.RaiseEvent();
         ClearSpawnedGames();
-        foreach (var item in availableButtons)
-        {
-            item.ResetButton();
-        }
+        tabletButtonGroup.DisableAllButtons();
     }
 
     public void LoadNewLevelData()
@@ -139,10 +140,8 @@ public class LevelManager : MonoBehaviour
             availableButtons[i].gameObject.SetActive(false);
         }
         // disable buttons before level start
-        for (int i = 0; i < nGame + 1; i++)
-        {
-            availableButtons[i].SetDisabled();
-        }
+        tabletButtonGroup.DisableAllButtons();
+
         // move instantiated prop to the desired location, set instructions text, mom walk-out audio
         setPropLocEventChannel.RaiseEvent(propInstantiationLoc);
         setInstructionTextEventChannel.RaiseEvent(levelDatas[level - 1].instructionText);
@@ -153,15 +152,13 @@ public class LevelManager : MonoBehaviour
 
     private void PlayAgain(PokeButtonType type)
     {
+        // TODO: implement this
         if (type != PokeButtonType.PlayAgain) return;
 
         level = 1;
         isLevelComplete = true;
         ClearSpawnedGames();
-        foreach (var item in availableButtons)
-        {
-            item.ResetButton();
-        }
+        tabletButtonGroup.DisableAllButtons();
     }
 
     private void QuitGame(PokeButtonType type)
@@ -174,11 +171,8 @@ public class LevelManager : MonoBehaviour
     {
         if (type != PokeButtonType.StartLevel) return;
 
-        for (int i = 0; i < nGame + 1; i++)
-        {
-            availableButtons[i].SetEnabled();
-        }
-        availableButtons[nGame].SetToggleOn();
+        tabletButtonGroup.EnableAllButtons();
+        availableButtons[nGame].RaiseEvent();
 
         levelStartEventChannel.RaiseEvent();
     }
@@ -196,7 +190,7 @@ public class LevelManager : MonoBehaviour
     private void DisableGameButton(IndividualGameName data)
     {
         // disable tablet button; called when an individual game is complete
-        availableButtons[nGame].SetToggleOn();
+        availableButtons[nGame].RaiseEvent();
         gameNameDataPairs[data].button.SetDisabled();
     }
 
@@ -238,10 +232,7 @@ public class LevelManager : MonoBehaviour
         if (!b || !availableButtons[nGame].CheckIfToggleOn())
         {
             ClearSpawnedGames();
-            foreach (var item in availableButtons)
-            {
-                item.ResetButton();
-            }
+            tabletButtonGroup.DisableAllButtons();
             levelFailedEventChannel.RaiseEvent();
         }
     }
