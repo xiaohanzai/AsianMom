@@ -50,6 +50,7 @@ namespace PaintingGame
         private void OnLevelEventRaised(LevelEventInfo data)
         {
             if (data.type == LevelEventType.LevelComplete) OnLevelComplete();
+            else if (data.type == LevelEventType.LevelFailed) EndGame();
         }
 
         private void PrepGame(PaintingData data)

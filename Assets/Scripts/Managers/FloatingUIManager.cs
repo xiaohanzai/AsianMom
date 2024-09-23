@@ -14,6 +14,7 @@ public class FloatingUIManager : MonoBehaviour
 
     [Header("Level Failed UI")]
     [SerializeField] private float waitTimeToShowLevelFailedUI;
+    [SerializeField] private GameObject otherLevelFailedUI;
     [SerializeField] private GameObject levelFailedUI;
     [SerializeField] private GameObject levelFailedButtonsParent;
 
@@ -41,6 +42,7 @@ public class FloatingUIManager : MonoBehaviour
     private void OnLevelEventRaised(LevelEventInfo data)
     {
         if (data.type == LevelEventType.LevelFailed) DelayedShowLevelFailedUIAndButtons();
+        else if (data.type == LevelEventType.LevelFailedOther) DelayedShowOtherLevelFailedUIAndButtons();
     }
 
     private void OnPokeButtonEventRaised(PokeButtonType type)
@@ -91,8 +93,20 @@ public class FloatingUIManager : MonoBehaviour
         levelFailedButtonsParent.SetActive(true);
     }
 
+    private void DelayedShowOtherLevelFailedUIAndButtons()
+    {
+        Invoke("ShowOtherLevelFailedUIAndButtons", waitTimeToShowLevelFailedUI);
+    }
+
+    private void ShowOtherLevelFailedUIAndButtons()
+    {
+        otherLevelFailedUI.SetActive(true);
+        levelFailedButtonsParent.SetActive(true);
+    }
+
     private void HideLevelFailedUIAndButtons()
     {
+        otherLevelFailedUI.SetActive(false);
         levelFailedUI.SetActive(false);
         levelFailedButtonsParent.SetActive(false);
     }

@@ -113,6 +113,6 @@ public class FollowUserGaze : MonoBehaviour
 
     private void OnLevelEventRaised(LevelEventInfo data)
     {
-        if (data.type == LevelEventType.LevelFailed) ResetTimer();
+        if (data.type == LevelEventType.LevelFailed || data.type == LevelEventType.LevelFailedOther) ResetTimer();
     }
 }

@@ -11,6 +11,7 @@ namespace Mom
         LookAround,
         GetAngry,
         WalkOut,
+        Dead,
     }
 
     public class MomController : MonoBehaviour
@@ -32,19 +33,21 @@ namespace Mom
         [SerializeField] private AudioSource lookAroundAudio;
         [SerializeField] private AudioSource angryAudio;
         [SerializeField] private AudioSource walkOutAudio;
+        [SerializeField] private AudioSource deadAudio;
         [SerializeField] private AudioSource doorOpenAudio;
         [SerializeField] private AudioSource doorCloseAudio;
 
         [Header("Listening to")]
         [SerializeField] private VoidEventChannelSO spawnMomEventChannel;
-        [SerializeField] private LevelEventChannelSO levelEventChannel;
         [SerializeField] private FloatEventChannelSO setWaitTimeEventChannel;
         [SerializeField] private IntEventChannelSO setNRoundsEventChannel;
         [SerializeField] private AudioEventChannelSO audioEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
 
         [Header("Broadcasting on")]
         [SerializeField] private BoolEventChannelSO checkIndividualGamesEventChannel;
         [SerializeField] private VoidEventChannelSO setNextRoundParamsEventChannel;
+        [SerializeField] private VoidEventChannelSO momDeadEventChannel;
         [SerializeField] private FloatEventChannelSO updateMomUIEventChannel;
         [SerializeField] private BoolEventChannelSO showMomUIEventChannel;
         [SerializeField] private VoidEventChannelSO timerStartEventChannel;
@@ -106,6 +109,10 @@ namespace Mom
                 case MomStateName.WalkOut:
                     newState = new WalkState(this, false);
                     break;
+                case MomStateName.Dead:
+                    newState = new DeadState(this);
+                    momDeadEventChannel.RaiseEvent();
+                    break;
                 default:
                     break;
             }
@@ -130,6 +137,11 @@ namespace Mom
             {
                 doorAnimator.SetBool("IsDoorOpening", false);
             }
+        }
+
+        public void StartDeadState()
+        {
+            ChangeState(MomStateName.Dead);
         }
 
         public void StartRestState()
@@ -234,6 +246,8 @@ namespace Mom
                     return lookAroundAudio;
                 case MomStateName.GetAngry:
                     return angryAudio;
+                case MomStateName.Dead:
+                    return deadAudio;
                 default:
                     return null;
             }

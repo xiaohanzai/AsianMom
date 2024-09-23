@@ -25,4 +25,5 @@ public enum LevelEventType
     LevelStart,
     LevelFailed,
     LevelComplete,
+    LevelFailedOther,
 }

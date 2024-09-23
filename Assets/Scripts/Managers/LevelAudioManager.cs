@@ -29,7 +29,7 @@ public class LevelAudioManager : MonoBehaviour
 
     private void OnLevelEventRaised(LevelEventInfo data)
     {
-        if (data.type == LevelEventType.LevelFailed) DelayedPlayFailedAudio();
+        if (data.type == LevelEventType.LevelFailed || data.type == LevelEventType.LevelFailedOther) DelayedPlayFailedAudio();
     }
 
     private void DelayedPlaySuccessAudio(IndividualGameName data)

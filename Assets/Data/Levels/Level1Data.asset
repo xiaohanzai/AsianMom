@@ -22,8 +22,8 @@ MonoBehaviour:
     by mom!  Mom will come check in with you every once in a while!  Poke each game
     on tablet to play.  Poke <color=#ff0000><size=72>Enter</size></color> on keyboard
     to start.
-  timeIntervalMax: 35
-  timeIntervalMin: 35
+  timeIntervalMax: 5
+  timeIntervalMin: 5
   waitTime: 5
   nRounds: 1000
   momWalkOutAudio: {fileID: 8300000, guid: 20bfeb9f4f4334fcd84fd973da83db27, type: 3}

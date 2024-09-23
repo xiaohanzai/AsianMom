@@ -19,6 +19,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private PokeButtonEventChannelSO pokeButtonEventChannel;
     [SerializeField] private IndividualGameEventChannelSO gameCompleteEventChannel;
     [SerializeField] private BoolEventChannelSO checkIndividualGamesEventChannel;
+    [SerializeField] private VoidEventChannelSO momDeadEventChannel;
 
     [Header("Broadcasting on")]
     [SerializeField] private LevelEventChannelSO levelEventChannel;
@@ -41,6 +42,7 @@ public class LevelManager : MonoBehaviour
         pokeButtonEventChannel.OnEventRaised += OnPokeButtonEventRaised;
         gameCompleteEventChannel.OnEventRaised += DelayedDisableGame;
         checkIndividualGamesEventChannel.OnEventRaised += CheckIfAnyGameIsOn;
+        momDeadEventChannel.OnEventRaised += SetLevelFailedOther;
 
         availableButtons = tabletButtonGroup.GetAllButtons();
     }
@@ -50,6 +52,7 @@ public class LevelManager : MonoBehaviour
         pokeButtonEventChannel.OnEventRaised -= OnPokeButtonEventRaised;
         gameCompleteEventChannel.OnEventRaised -= DelayedDisableGame;
         checkIndividualGamesEventChannel.OnEventRaised -= CheckIfAnyGameIsOn;
+        momDeadEventChannel.OnEventRaised -= SetLevelFailedOther;
     }
 
     private void OnPokeButtonEventRaised(PokeButtonType type)
@@ -221,5 +224,17 @@ public class LevelManager : MonoBehaviour
             tabletButtonGroup.DisableAllButtons();
             levelEventChannel.RaiseEvent(new LevelEventInfo { type = LevelEventType.LevelFailed });
         }
+    }
+
+    private void SetLevelFailedOther()
+    {
+        Invoke("DelayedSetLevelFailedOther", 1f);
+    }
+
+    private void DelayedSetLevelFailedOther()
+    {
+        ClearSpawnedGames();
+        tabletButtonGroup.DisableAllButtons();
+        levelEventChannel.RaiseEvent(new LevelEventInfo { type = LevelEventType.LevelFailedOther });
     }
 }

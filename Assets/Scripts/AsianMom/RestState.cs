@@ -21,6 +21,7 @@ namespace Mom
             momAnimator.SetBool("IsWalking", false);
             momAnimator.SetBool("IsAngry", false);
             momAnimator.SetBool("IsLookingAround", false);
+            momAnimator.SetBool("IsDead", false);
 
             Animator doorAnimator = _controller.GetDoorAnimator();
             doorAnimator.SetBool("IsDoorOpening", false);

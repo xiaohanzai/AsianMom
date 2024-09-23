@@ -146,17 +146,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2456810674908991184, guid: af0cf7d916f48456fbaea7413ceb143a,
-        type: 3}
-      propertyPath: m_TranslationOffset.z
-      value: -0.00052160025
-      objectReference: {fileID: 0}
-    - target: {fileID: 5101594210428802023, guid: af0cf7d916f48456fbaea7413ceb143a,
-        type: 3}
-      propertyPath: setPropLocEventChannel
-      value: 
-      objectReference: {fileID: 11400000, guid: a9d1a11595844464f93619933aae74b1,
-        type: 2}
     - target: {fileID: 5149582804248611444, guid: af0cf7d916f48456fbaea7413ceb143a,
         type: 3}
       propertyPath: m_Name

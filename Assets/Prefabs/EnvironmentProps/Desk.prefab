@@ -1836,6 +1836,8 @@ MonoBehaviour:
     type: 2}
   checkIndividualGamesEventChannel: {fileID: 11400000, guid: 3c149b9fffd804c75aa178f002d1b11b,
     type: 2}
+  momDeadEventChannel: {fileID: 11400000, guid: 0d177a01499eb4e6b90df48d0fae659f,
+    type: 2}
   levelEventChannel: {fileID: 11400000, guid: 96dfc3e519c9945bf9bad153639f8852, type: 2}
   allLevelsCompleteEventChannel: {fileID: 11400000, guid: 494507ccfd27d41c9ba8b6b686d65076,
     type: 2}

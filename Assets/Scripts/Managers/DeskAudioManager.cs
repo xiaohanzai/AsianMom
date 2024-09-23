@@ -35,7 +35,7 @@ public class DeskAudioManager : MonoBehaviour
 
     private void OnLevelEventRaised(LevelEventInfo data)
     {
-        if (data.type == LevelEventType.LevelComplete || data.type == LevelEventType.LevelFailed) StopIndividualGameAudio();
+        if (data.type == LevelEventType.LevelComplete || data.type == LevelEventType.LevelFailed || data.type == LevelEventType.LevelFailedOther) StopIndividualGameAudio();
     }
 
     private void OnPokeButtonEventRaised(PokeButtonType type)
