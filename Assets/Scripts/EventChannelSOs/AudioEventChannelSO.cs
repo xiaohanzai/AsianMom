@@ -5,11 +5,25 @@ using UnityEngine.Events;
 public class AudioEventChannelSO : DescriptionSO
 {
     [Tooltip("The action to perform")]
-    public UnityAction<AudioClip> OnEventRaised;
+    public UnityAction<AudioEventInfo> OnEventRaised;
 
-    public void RaiseEvent(AudioClip data)
+    public void RaiseEvent(AudioEventInfo data)
     {
         if (OnEventRaised != null)
             OnEventRaised.Invoke(data);
     }
+}
+
+public class AudioEventInfo
+{
+    public AudioType type;
+    public AudioClip clip;
+}
+
+public enum AudioType
+{
+    BGM,
+    Desk,
+    MomWalkOut,
+    MomAngry,
 }

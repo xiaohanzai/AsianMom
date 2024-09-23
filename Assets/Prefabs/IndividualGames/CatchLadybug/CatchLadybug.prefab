@@ -179,16 +179,14 @@ MonoBehaviour:
   ladybugPropData: {fileID: 11400000, guid: ca56b288361b5432497d387e060e8fc8, type: 2}
   basket: {fileID: 3859253070242901897}
   waitTime: 6
+  percentage: 0.5
   spawnObjectsEventChannel: {fileID: 11400000, guid: 3ad092d5d1eb8439a824c5abc5b981c7,
     type: 2}
   gameCompleteEventChannel: {fileID: 11400000, guid: b2ac92ccc069a4f4d9cb6db9d4ca4426,
     type: 2}
   gameStartEventChannel: {fileID: 11400000, guid: 2256128526c8a445f9e6a9f5e718a719,
     type: 2}
-  levelLoadEventChannel: {fileID: 11400000, guid: 1992b7052c9c94549a8403b93e68f5c6,
-    type: 2}
-  levelCompleteEventChannel: {fileID: 11400000, guid: cc996eaae2c1040c4a5728dfdd8e4486,
-    type: 2}
+  levelEventChannel: {fileID: 11400000, guid: 96dfc3e519c9945bf9bad153639f8852, type: 2}
 --- !u!1 &6425022154206603524
 GameObject:
   m_ObjectHideFlags: 0

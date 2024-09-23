@@ -9,19 +9,24 @@ namespace MusicGame
         [SerializeField] private MusicData musicData;
 
         [Header("Listening to")]
-        [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
 
         [Header("Broadcasting on")]
         [SerializeField] private SetMusicEventChannelSO setMusicEventChannel;
 
         private void Awake()
         {
-            levelLoadEventChannel.OnEventRaised += SetMusic;
+            levelEventChannel.OnEventRaised += OnLevelEventRaised;
         }
 
         private void OnDestroy()
         {
-            levelLoadEventChannel.OnEventRaised -= SetMusic;
+            levelEventChannel.OnEventRaised -= OnLevelEventRaised;
+        }
+
+        private void OnLevelEventRaised(LevelEventInfo data)
+        {
+            if (data.type == LevelEventType.LevelLoad) SetMusic();
         }
 
         private void SetMusic()

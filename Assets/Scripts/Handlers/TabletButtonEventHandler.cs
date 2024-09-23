@@ -17,7 +17,7 @@ public class TabletButtonEventHandler : MonoBehaviour
     [Header("Broadcasting on")]
     [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
     [SerializeField] private UIInstructionEventChannelSO uIInstructionEventChannel;
-    [SerializeField] private AudioEventChannelSO deskAudioEventChannel;
+    [SerializeField] private AudioEventChannelSO audioEventChannel;
 
     private TabletButtonToggleGroup tabletButtonToggleGroup;
 
@@ -25,8 +25,8 @@ public class TabletButtonEventHandler : MonoBehaviour
     private Color selectedColor;
     private Color disabledColor;
 
-    [SerializeField] private bool isToggledOn;
-    [SerializeField] private bool isEnabled;
+    private bool isToggledOn;
+    private bool isEnabled;
 
     public void LinkToToggleGroup(TabletButtonToggleGroup group)
     {
@@ -48,7 +48,7 @@ public class TabletButtonEventHandler : MonoBehaviour
                 video = instructionVideo,
             };
             uIInstructionEventChannel.RaiseEvent(data);
-            deskAudioEventChannel.RaiseEvent(audioClip);
+            audioEventChannel.RaiseEvent(new AudioEventInfo { type = AudioType.Desk, clip = audioClip });
             tabletButtonToggleGroup.SetCurrentButton(this);
             isToggledOn = true;
         }

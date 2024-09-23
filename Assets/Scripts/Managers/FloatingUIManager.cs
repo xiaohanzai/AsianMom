@@ -19,7 +19,7 @@ public class FloatingUIManager : MonoBehaviour
 
     [Header("Listening to")]
     [SerializeField] private PokeButtonEventChannelSO pokeButtonEventChannel;
-    [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
+    [SerializeField] private LevelEventChannelSO levelEventChannel;
 
     private void Start()
     {
@@ -27,21 +27,31 @@ public class FloatingUIManager : MonoBehaviour
         HideShuffleEnvironmentUIAndButtons();
         HideLevelFailedUIAndButtons();
 
-        pokeButtonEventChannel.OnEventRaised += HideLogoUIAndButtons;
-        pokeButtonEventChannel.OnEventRaised += ShowShuffleEnvironmentUIAndButtons;
-        pokeButtonEventChannel.OnEventRaised += HideShuffleEnvironmentUIAndButtons;
-        pokeButtonEventChannel.OnEventRaised += HideLevelFailedUIAndButtons;
+        pokeButtonEventChannel.OnEventRaised += OnPokeButtonEventRaised;
 
-        levelFailedEventChannel.OnEventRaised += DelayedShowLevelFailedUIAndButtons;
+        levelEventChannel.OnEventRaised += OnLevelEventRaised;
     }
 
     private void OnDestroy()
     {
-        pokeButtonEventChannel.OnEventRaised -= HideLogoUIAndButtons;
-        pokeButtonEventChannel.OnEventRaised -= ShowShuffleEnvironmentUIAndButtons;
-        pokeButtonEventChannel.OnEventRaised -= HideShuffleEnvironmentUIAndButtons;
-        pokeButtonEventChannel.OnEventRaised -= HideLevelFailedUIAndButtons;
-        levelFailedEventChannel.OnEventRaised -= DelayedShowLevelFailedUIAndButtons;
+        pokeButtonEventChannel.OnEventRaised -= OnPokeButtonEventRaised;
+        levelEventChannel.OnEventRaised -= OnLevelEventRaised;
+    }
+
+    private void OnLevelEventRaised(LevelEventInfo data)
+    {
+        if (data.type == LevelEventType.LevelFailed) DelayedShowLevelFailedUIAndButtons();
+    }
+
+    private void OnPokeButtonEventRaised(PokeButtonType type)
+    {
+        if (type == PokeButtonType.StartGame)
+        {
+            HideLogoUIAndButtons();
+            ShowShuffleEnvironmentUIAndButtons();
+        }
+        else if (type == PokeButtonType.ConfirmEnvironment) HideShuffleEnvironmentUIAndButtons();
+        else if (type == PokeButtonType.TryAgain) HideLevelFailedUIAndButtons();
     }
 
     //private void SetPosition()
@@ -52,12 +62,8 @@ public class FloatingUIManager : MonoBehaviour
     //    transform.position += Vector3.up * 1.4f;
     //}
 
-    private void HideLogoUIAndButtons(PokeButtonType type)
+    private void HideLogoUIAndButtons()
     {
-        if (type != PokeButtonType.StartGame)
-        {
-            return;
-        }
         logoUI.SetActive(false);
         startGameButton.SetActive(false);
     }
@@ -68,23 +74,10 @@ public class FloatingUIManager : MonoBehaviour
         shuffleEnvironmentButtonsParent.SetActive(false);
     }
 
-    private void ShowShuffleEnvironmentUIAndButtons(PokeButtonType type)
+    private void ShowShuffleEnvironmentUIAndButtons()
     {
-        if (type != PokeButtonType.StartGame)
-        {
-            return;
-        }
         shuffleEnvironmentUI.SetActive(true);
         shuffleEnvironmentButtonsParent.SetActive(true);
-    }
-
-    private void HideShuffleEnvironmentUIAndButtons(PokeButtonType type)
-    {
-        if (type != PokeButtonType.ConfirmEnvironment)
-        {
-            return;
-        }
-        HideShuffleEnvironmentUIAndButtons();
     }
 
     private void DelayedShowLevelFailedUIAndButtons()
@@ -102,11 +95,5 @@ public class FloatingUIManager : MonoBehaviour
     {
         levelFailedUI.SetActive(false);
         levelFailedButtonsParent.SetActive(false);
-    }
-
-    private void HideLevelFailedUIAndButtons(PokeButtonType type)
-    {
-        if (type != PokeButtonType.TryAgain) return;
-        HideLevelFailedUIAndButtons();
     }
 }

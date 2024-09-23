@@ -19,8 +19,7 @@ namespace ShootFly
 
         [Header("Listening to")]
         [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
-        [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
-        [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
 
         private List<Fly> flies = new List<Fly>(); // all the instantiated flies
         private List<Fly> aliveFlies = new List<Fly>(); // only the alive flies
@@ -30,27 +29,31 @@ namespace ShootFly
 
         private void Awake()
         {
-            levelLoadEventChannel.OnEventRaised += PrepGame; // need to subscribe before level start events are raised
+            levelEventChannel.OnEventRaised += OnLevelEventRaised; // need to subscribe before level start events are raised
             spawnObjectsEventChannel.OnObjectsSpawned += PrepFlies;
         }
 
         void Start()
         {
             gameStartEventChannel.OnEventRaised += StartGame;
-            levelCompleteEventChannel.OnEventRaised += OnLevelComplete;
         }
 
         private void OnDestroy()
         {
             gameStartEventChannel.OnEventRaised -= StartGame;
-            levelLoadEventChannel.OnEventRaised -= PrepGame;
-            levelCompleteEventChannel.OnEventRaised -= OnLevelComplete;
+            levelEventChannel.OnEventRaised -= OnLevelEventRaised;
             spawnObjectsEventChannel.OnObjectsSpawned -= PrepFlies;
         }
 
         void Update()
         {
             
+        }
+
+        private void OnLevelEventRaised(LevelEventInfo data)
+        {
+            if (data.type == LevelEventType.LevelLoad) PrepGame();
+            else if (data.type == LevelEventType.LevelComplete) OnLevelComplete();
         }
 
         public void PrepGame()

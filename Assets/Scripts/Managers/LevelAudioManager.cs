@@ -13,18 +13,23 @@ public class LevelAudioManager : MonoBehaviour
 
     [Header("Listening to")]
     [SerializeField] private IndividualGameEventChannelSO gameCompleteEventChannel;
-    [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
+    [SerializeField] private LevelEventChannelSO levelEventChannel;
 
     void Start()
     {
         gameCompleteEventChannel.OnEventRaised += DelayedPlaySuccessAudio;
-        levelFailedEventChannel.OnEventRaised += DelayedPlayFailedAudio;
+        levelEventChannel.OnEventRaised += OnLevelEventRaised;
     }
 
     private void OnDestroy()
     {
         gameCompleteEventChannel.OnEventRaised -= DelayedPlaySuccessAudio;
-        levelFailedEventChannel.OnEventRaised -= DelayedPlayFailedAudio;
+        levelEventChannel.OnEventRaised -= OnLevelEventRaised;
+    }
+
+    private void OnLevelEventRaised(LevelEventInfo data)
+    {
+        if (data.type == LevelEventType.LevelFailed) DelayedPlayFailedAudio();
     }
 
     private void DelayedPlaySuccessAudio(IndividualGameName data)

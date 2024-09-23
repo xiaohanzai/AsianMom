@@ -21,7 +21,7 @@ namespace PaintingGame
         [Header("Listening to")]
         [SerializeField] private SetPaintingEventChannelSO setPaintingEventChannel;
         [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
-        [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
 
         private PaintingPatternsParent paintingPatternsParent;
         private Dictionary<PaintingPattern, bool> dict = new Dictionary<PaintingPattern, bool>();
@@ -35,7 +35,7 @@ namespace PaintingGame
 
             setPaintingEventChannel.OnEventRaised += PrepGame;
             gameStartEventChannel.OnEventRaised += StartGame;
-            levelCompleteEventChannel.OnEventRaised += OnLevelComplete;
+            levelEventChannel.OnEventRaised += OnLevelEventRaised;
 
             viualsParent.SetActive(false);
         }
@@ -44,7 +44,12 @@ namespace PaintingGame
         {
             setPaintingEventChannel.OnEventRaised -= PrepGame;
             gameStartEventChannel.OnEventRaised -= StartGame;
-            levelCompleteEventChannel.OnEventRaised -= OnLevelComplete;
+            levelEventChannel.OnEventRaised -= OnLevelEventRaised;
+        }
+
+        private void OnLevelEventRaised(LevelEventInfo data)
+        {
+            if (data.type == LevelEventType.LevelComplete) OnLevelComplete();
         }
 
         private void PrepGame(PaintingData data)

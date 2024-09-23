@@ -19,8 +19,7 @@ namespace CatchLadybug
 
         [Header("Listening to")]
         [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
-        [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
-        [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
 
         private List<Ladybug> ladybugs = new List<Ladybug>(); // all the instantiated flies
         private List<Ladybug> aliveLadybugs = new List<Ladybug>(); // only the alive flies
@@ -30,27 +29,26 @@ namespace CatchLadybug
 
         private void Awake()
         {
-            levelLoadEventChannel.OnEventRaised += PrepGame; // need to subscribe before level start events are raised
+            levelEventChannel.OnEventRaised += OnLevelEventRaised; // need to subscribe before level start events are raised
             spawnObjectsEventChannel.OnObjectsSpawned += PrepLadybugs;
         }
 
         void Start()
         {
             gameStartEventChannel.OnEventRaised += StartGame;
-            levelCompleteEventChannel.OnEventRaised += OnLevelComplete;
         }
 
         private void OnDestroy()
         {
             gameStartEventChannel.OnEventRaised -= StartGame;
-            levelLoadEventChannel.OnEventRaised -= PrepGame;
-            levelCompleteEventChannel.OnEventRaised -= OnLevelComplete;
+            levelEventChannel.OnEventRaised -= OnLevelEventRaised;
             spawnObjectsEventChannel.OnObjectsSpawned -= PrepLadybugs;
         }
 
-        void Update()
+        private void OnLevelEventRaised(LevelEventInfo data)
         {
-
+            if (data.type == LevelEventType.LevelLoad) PrepGame();
+            else if (data.type == LevelEventType.LevelComplete) OnLevelComplete();
         }
 
         public void PrepGame()

@@ -21,15 +21,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private BoolEventChannelSO checkIndividualGamesEventChannel;
 
     [Header("Broadcasting on")]
-    [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
-    [SerializeField] private VoidEventChannelSO levelStartEventChannel;
-    [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
-    [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
+    [SerializeField] private LevelEventChannelSO levelEventChannel;
     [SerializeField] private VoidEventChannelSO allLevelsCompleteEventChannel;
     [SerializeField] private TransformEventChannelSO setPropLocEventChannel;
     [SerializeField] private TextEventChannelSO setInstructionTextEventChannel;
-    [SerializeField] private AudioEventChannelSO setMomWalkOutAudioEventChannel;
-    [SerializeField] private AudioEventChannelSO setMomAngryAudioEventChannel;
+    [SerializeField] private AudioEventChannelSO audioEventChannel;
     [SerializeField] private SpawnMomParametersEventChannelSO setSpawnMomParametersEventChannel;
 
     private class InternalGameData
@@ -42,10 +38,7 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        pokeButtonEventChannel.OnEventRaised += LoadNewLevelData;
-        pokeButtonEventChannel.OnEventRaised += StartLevel;
-        pokeButtonEventChannel.OnEventRaised += PlayAgain;
-        pokeButtonEventChannel.OnEventRaised += QuitGame;
+        pokeButtonEventChannel.OnEventRaised += OnPokeButtonEventRaised;
         gameCompleteEventChannel.OnEventRaised += DelayedDisableGame;
         checkIndividualGamesEventChannel.OnEventRaised += CheckIfAnyGameIsOn;
 
@@ -54,29 +47,26 @@ public class LevelManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        pokeButtonEventChannel.OnEventRaised -= LoadNewLevelData;
-        pokeButtonEventChannel.OnEventRaised -= StartLevel;
-        pokeButtonEventChannel.OnEventRaised -= PlayAgain;
-        pokeButtonEventChannel.OnEventRaised += QuitGame;
+        pokeButtonEventChannel.OnEventRaised -= OnPokeButtonEventRaised;
         gameCompleteEventChannel.OnEventRaised -= DelayedDisableGame;
         checkIndividualGamesEventChannel.OnEventRaised -= CheckIfAnyGameIsOn;
     }
 
-    private void LoadNewLevelData(PokeButtonType type)
+    private void OnPokeButtonEventRaised(PokeButtonType type)
     {
-        if (type != PokeButtonType.LoadLevel && type != PokeButtonType.TryAgain)
-        {
-            return;
-        }
-        LoadNewLevelData();
+        if (type == PokeButtonType.LoadLevel || type == PokeButtonType.TryAgain) LoadNewLevelData();
+        else if (type == PokeButtonType.StartLevel) StartLevel();
+        else if (type == PokeButtonType.PlayAgain) PlayAgain();
+        else if (type == PokeButtonType.Quit) QuitGame();
     }
 
     public void ClearLevel()
     {
         // clear data and reset tablet buttons if level complete
         isLevelComplete = true;
-        levelCompleteEventChannel.RaiseEvent();
+        levelEventChannel.RaiseEvent(new LevelEventInfo { type = LevelEventType.LevelComplete });
         ClearSpawnedGames();
+        tabletButtonGroup.ResetAllButtons();
         tabletButtonGroup.DisableAllButtons();
     }
 
@@ -145,36 +135,31 @@ public class LevelManager : MonoBehaviour
         // move instantiated prop to the desired location, set instructions text, mom walk-out audio
         setPropLocEventChannel.RaiseEvent(propInstantiationLoc);
         setInstructionTextEventChannel.RaiseEvent(levelDatas[level - 1].instructionText);
-        setMomWalkOutAudioEventChannel.RaiseEvent(levelDatas[level - 1].momWalkOutAudio);
-        setMomAngryAudioEventChannel.RaiseEvent(levelDatas[level - 1].momAngryAudio);
-        levelLoadEventChannel.RaiseEvent();
+        audioEventChannel.RaiseEvent(new AudioEventInfo { type = AudioType.MomWalkOut, clip = levelDatas[level - 1].momWalkOutAudio });
+        audioEventChannel.RaiseEvent(new AudioEventInfo { type = AudioType.MomAngry, clip = levelDatas[level - 1].momAngryAudio });
+        audioEventChannel.RaiseEvent(new AudioEventInfo { type = AudioType.BGM, clip = levelDatas[level - 1].bgm });
+        levelEventChannel.RaiseEvent(new LevelEventInfo { type = LevelEventType.LevelLoad });
     }
 
-    private void PlayAgain(PokeButtonType type)
+    private void PlayAgain()
     {
-        // TODO: implement this
-        if (type != PokeButtonType.PlayAgain) return;
-
         level = 1;
-        isLevelComplete = true;
+        isLevelComplete = false;
         ClearSpawnedGames();
         tabletButtonGroup.DisableAllButtons();
     }
 
-    private void QuitGame(PokeButtonType type)
+    private void QuitGame()
     {
-        if (type != PokeButtonType.Quit) return;
         Application.Quit();
     }
 
-    private void StartLevel(PokeButtonType type)
+    private void StartLevel()
     {
-        if (type != PokeButtonType.StartLevel) return;
-
         tabletButtonGroup.EnableAllButtons();
         availableButtons[nGame].RaiseEvent();
 
-        levelStartEventChannel.RaiseEvent();
+        levelEventChannel.RaiseEvent(new LevelEventInfo { type = LevelEventType.LevelStart });
     }
 
     private void ClearSpawnedGames()
@@ -185,6 +170,7 @@ public class LevelManager : MonoBehaviour
             gameNameDataPairs[key].button.ResetButton();
         }
         gameNameDataPairs.Clear();
+        availableButtons[nGame].ResetButton();
     }
 
     private void DisableGameButton(IndividualGameName data)
@@ -233,7 +219,7 @@ public class LevelManager : MonoBehaviour
         {
             ClearSpawnedGames();
             tabletButtonGroup.DisableAllButtons();
-            levelFailedEventChannel.RaiseEvent();
+            levelEventChannel.RaiseEvent(new LevelEventInfo { type = LevelEventType.LevelFailed });
         }
     }
 }

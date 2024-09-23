@@ -9,19 +9,24 @@ namespace PaintingGame
         [SerializeField] private PaintingData paintingData;
 
         [Header("Listening to")]
-        [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
 
         [Header("Broadcasting on")]
         [SerializeField] private SetPaintingEventChannelSO setPaintingEventChannel;
 
         private void Awake()
         {
-            levelLoadEventChannel.OnEventRaised += SetPainting;
+            levelEventChannel.OnEventRaised += OnLevelEventRaised;
         }
 
         private void OnDestroy()
         {
-            levelLoadEventChannel.OnEventRaised -= SetPainting;
+            levelEventChannel.OnEventRaised -= OnLevelEventRaised;
+        }
+
+        private void OnLevelEventRaised(LevelEventInfo data)
+        {
+            if (data.type == LevelEventType.LevelLoad) SetPainting();
         }
 
         private void SetPainting()

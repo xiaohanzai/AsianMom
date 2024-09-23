@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84e8c5cd8cc7b44d2957ac959e751a9a, type: 3}
-  m_Name: MomAngryAudioEventChannel
+  m_Name: AudioEventChannel
   m_EditorClassIdentifier: 
   m_Description: 

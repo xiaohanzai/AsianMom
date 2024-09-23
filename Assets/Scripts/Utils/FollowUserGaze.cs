@@ -23,7 +23,7 @@ public class FollowUserGaze : MonoBehaviour
     private float timer;
 
     [Header("Listening to")]
-    [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
+    [SerializeField] private LevelEventChannelSO levelEventChannel;
 
     private void Awake()
     {
@@ -35,12 +35,12 @@ public class FollowUserGaze : MonoBehaviour
 
     private void Start()
     {
-        levelFailedEventChannel.OnEventRaised += ResetTimer;
+        levelEventChannel.OnEventRaised += OnLevelEventRaised;
     }
 
     private void OnDestroy()
     {
-        levelFailedEventChannel.OnEventRaised -= ResetTimer;
+        levelEventChannel.OnEventRaised -= OnLevelEventRaised;
     }
 
     private void Update()
@@ -109,5 +109,10 @@ public class FollowUserGaze : MonoBehaviour
         targetPosition.y = playerPos.y + m_menuHeight;
 
         m_uiElement.position = targetPosition;
+    }
+
+    private void OnLevelEventRaised(LevelEventInfo data)
+    {
+        if (data.type == LevelEventType.LevelFailed) ResetTimer();
     }
 }

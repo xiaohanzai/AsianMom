@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class EventSystemAdjustment : MonoBehaviour
 {
+    [SerializeField] private GameObject debugCanvas;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +15,7 @@ public class EventSystemAdjustment : MonoBehaviour
         GetComponent<PointableCanvasModule>().enabled = false;
 #else
         GetComponent<StandaloneInputModule>().enabled = false;
+        debugCanvas.SetActive(false);
 #endif
     }
 

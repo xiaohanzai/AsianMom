@@ -883,7 +883,4 @@ MonoBehaviour:
     type: 2}
   uIInstructionEventChannel: {fileID: 11400000, guid: 22f3f0c08db86476d9ae460f98effd4d,
     type: 2}
-  deskAudioEventChannel: {fileID: 11400000, guid: 2206915f938a64cbc8e3e2af51eff8a8,
-    type: 2}
-  isToggledOn: 0
-  isEnabled: 0
+  audioEventChannel: {fileID: 11400000, guid: 53a5016a30d45438686f3adfc1be7e30, type: 2}

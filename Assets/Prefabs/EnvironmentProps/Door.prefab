@@ -408,6 +408,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6877207713419399127}
   - component: {fileID: 2663053623235920187}
+  - component: {fileID: 2017792716440111118}
   - component: {fileID: 4646743057152067191}
   - component: {fileID: 1190879643419831452}
   m_Layer: 6
@@ -463,20 +464,12 @@ MonoBehaviour:
   doorCloseAudio: {fileID: 13942425446800369}
   spawnMomEventChannel: {fileID: 11400000, guid: 4da0438ec4b8b4733832157a5708e7de,
     type: 2}
-  levelStartEventChannel: {fileID: 11400000, guid: 925decd1326f840e486c65833a6398b3,
-    type: 2}
-  levelLoadEventChannel: {fileID: 11400000, guid: 1992b7052c9c94549a8403b93e68f5c6,
-    type: 2}
-  levelFailedEventChannel: {fileID: 11400000, guid: 541b2e753a1424ff3815f8f5ca216cea,
-    type: 2}
+  levelEventChannel: {fileID: 11400000, guid: 96dfc3e519c9945bf9bad153639f8852, type: 2}
   setWaitTimeEventChannel: {fileID: 11400000, guid: 7833eb8dc664f470c8ba2fa69c9abe0d,
     type: 2}
   setNRoundsEventChannel: {fileID: 11400000, guid: c9756028ab01e469a939db2012cc394b,
     type: 2}
-  momWalkOutAudioEventChannel: {fileID: 11400000, guid: 25fef94bb4c76433895bbce05f41d213,
-    type: 2}
-  momAngryAudioEventChannel: {fileID: 11400000, guid: d10dedb037fc948f29b9d11e53d4797d,
-    type: 2}
+  audioEventChannel: {fileID: 11400000, guid: 53a5016a30d45438686f3adfc1be7e30, type: 2}
   checkIndividualGamesEventChannel: {fileID: 11400000, guid: 3c149b9fffd804c75aa178f002d1b11b,
     type: 2}
   setNextRoundParamsEventChannel: {fileID: 11400000, guid: 55d1f0928ee384a198e462d5b7e00cc4,
@@ -486,6 +479,25 @@ MonoBehaviour:
   showMomUIEventChannel: {fileID: 11400000, guid: 40138b50a02cd4ef19d16dc2c832bb88,
     type: 2}
   timerStartEventChannel: {fileID: 11400000, guid: 1b9fd657fcc41437db02d111a68a8663,
+    type: 2}
+--- !u!114 &2017792716440111118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1961640965264807028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e198f9ca16e84a22b1a9fd6f0a08c10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  suspicionBarParent: {fileID: 1717049242509349129}
+  suspicionBar: {fileID: 576744240855589099}
+  levelEventChannel: {fileID: 11400000, guid: 96dfc3e519c9945bf9bad153639f8852, type: 2}
+  updateMomUIEventChannel: {fileID: 11400000, guid: cf7149f2cf4304c93b09828ecd708113,
+    type: 2}
+  showMomUIEventChannel: {fileID: 11400000, guid: 40138b50a02cd4ef19d16dc2c832bb88,
     type: 2}
 --- !u!65 &4646743057152067191
 BoxCollider:
@@ -1306,7 +1318,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5556738366399455602}
-  - component: {fileID: 7954922503525659831}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -1330,28 +1341,6 @@ Transform:
   - {fileID: 1389078577994984584}
   m_Father: {fileID: 6136086052853438279}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7954922503525659831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5668600462019724054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e198f9ca16e84a22b1a9fd6f0a08c10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  suspicionBarParent: {fileID: 1717049242509349129}
-  suspicionBar: {fileID: 576744240855589099}
-  levelStartEventChannel: {fileID: 11400000, guid: 925decd1326f840e486c65833a6398b3,
-    type: 2}
-  levelFailedEventChannel: {fileID: 11400000, guid: 541b2e753a1424ff3815f8f5ca216cea,
-    type: 2}
-  updateMomUIEventChannel: {fileID: 11400000, guid: cf7149f2cf4304c93b09828ecd708113,
-    type: 2}
-  showMomUIEventChannel: {fileID: 11400000, guid: 40138b50a02cd4ef19d16dc2c832bb88,
-    type: 2}
 --- !u!1 &5778340128299549763
 GameObject:
   m_ObjectHideFlags: 0
