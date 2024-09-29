@@ -34,7 +34,7 @@ namespace MusicGame
         [Header("Listening to")]
         [SerializeField] private SetMusicEventChannelSO setMusicEventChannel;
         [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
-        [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
 
         private List<MusicKeyName> correctSequence = new List<MusicKeyName>();
         private int ind;
@@ -50,7 +50,7 @@ namespace MusicGame
 
             setMusicEventChannel.OnEventRaised += PrepGame;
             gameStartEventChannel.OnEventRaised += StartGame;
-            levelCompleteEventChannel.OnEventRaised += OnLevelComplete;
+            levelEventChannel.OnEventRaised += OnLevelEventRaised;
 
             foreach (var key in musicKeys)
             {
@@ -64,12 +64,18 @@ namespace MusicGame
         {
             setMusicEventChannel.OnEventRaised -= PrepGame;
             gameStartEventChannel.OnEventRaised -= StartGame;
-            levelCompleteEventChannel.OnEventRaised -= OnLevelComplete;
+            levelEventChannel.OnEventRaised -= OnLevelEventRaised;
 
             foreach (var key in musicKeys)
             {
                 key.Evt_OnKeyHit.RemoveListener(CheckSequence);
             }
+        }
+
+        private void OnLevelEventRaised(LevelEventInfo data)
+        {
+            if (data.type == LevelEventType.LevelComplete) OnLevelComplete();
+            else if (data.type == LevelEventType.LevelFailed || data.type == LevelEventType.LevelFailedOther) EndGame();
         }
 
         private void PrepGame(MusicData data)

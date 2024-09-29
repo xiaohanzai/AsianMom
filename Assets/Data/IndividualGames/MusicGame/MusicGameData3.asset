@@ -18,5 +18,5 @@ MonoBehaviour:
   buttonText: Play Xylophone
   instructionText: Play Find Friends following the music notations on top of the
     xylophone behind you
-  instructionVideo: {fileID: 32900000, guid: be3d49c38c56c4a3e95051d9ed387b9c, type: 3}
+  instructionVideo: {fileID: 32900000, guid: 3c5c81d4c1f044221856f0ec1ae78403, type: 3}
   audio: {fileID: 0}

@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   paintingData: {fileID: 11400000, guid: e2c076d9688c94478b868c9bc1a86a32, type: 2}
-  levelLoadEventChannel: {fileID: 11400000, guid: 1992b7052c9c94549a8403b93e68f5c6,
-    type: 2}
+  levelEventChannel: {fileID: 11400000, guid: 96dfc3e519c9945bf9bad153639f8852, type: 2}
   setPaintingEventChannel: {fileID: 11400000, guid: da26a607c66794e12937e3a2ac6a0a12,
     type: 2}

@@ -13,7 +13,7 @@ public class GameClockManager : MonoBehaviour
 
     [Header("Listening to")]
     [SerializeField] private VoidEventChannelSO timerStartEventChannel;
-    [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
+    [SerializeField] private LevelEventChannelSO levelEventChannel;
     [SerializeField] private FloatEventChannelSO setTimeIntervalEventChannel;
 
     void Start()
@@ -22,19 +22,24 @@ public class GameClockManager : MonoBehaviour
 
         setTimeIntervalEventChannel.OnEventRaised += SetTimeInterval;
         timerStartEventChannel.OnEventRaised += SetTimerStart;
-        levelCompleteEventChannel.OnEventRaised += SetTimerStop;
+        levelEventChannel.OnEventRaised += OnLevelEventRaised;
     }
 
     private void OnDestroy()
     {
         setTimeIntervalEventChannel.OnEventRaised -= SetTimeInterval;
         timerStartEventChannel.OnEventRaised -= SetTimerStart;
-        levelCompleteEventChannel.OnEventRaised -= SetTimerStop;
+        levelEventChannel.OnEventRaised -= OnLevelEventRaised;
     }
 
     void Update()
     {
         CheckSpawnMom();
+    }
+
+    private void OnLevelEventRaised(LevelEventInfo data)
+    {
+        if (data.type == LevelEventType.LevelComplete) SetTimerStop();
     }
 
     private void SetTimeInterval(float t)

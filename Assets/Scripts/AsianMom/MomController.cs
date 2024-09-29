@@ -11,6 +11,7 @@ namespace Mom
         LookAround,
         GetAngry,
         WalkOut,
+        Dead,
     }
 
     public class MomController : MonoBehaviour
@@ -32,22 +33,21 @@ namespace Mom
         [SerializeField] private AudioSource lookAroundAudio;
         [SerializeField] private AudioSource angryAudio;
         [SerializeField] private AudioSource walkOutAudio;
+        [SerializeField] private AudioSource deadAudio;
         [SerializeField] private AudioSource doorOpenAudio;
         [SerializeField] private AudioSource doorCloseAudio;
 
         [Header("Listening to")]
         [SerializeField] private VoidEventChannelSO spawnMomEventChannel;
-        [SerializeField] private VoidEventChannelSO levelStartEventChannel;
-        [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
-        [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
         [SerializeField] private FloatEventChannelSO setWaitTimeEventChannel;
         [SerializeField] private IntEventChannelSO setNRoundsEventChannel;
-        [SerializeField] private AudioEventChannelSO momWalkOutAudioEventChannel;
-        [SerializeField] private AudioEventChannelSO momAngryAudioEventChannel;
+        [SerializeField] private AudioEventChannelSO audioEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
 
         [Header("Broadcasting on")]
         [SerializeField] private BoolEventChannelSO checkIndividualGamesEventChannel;
         [SerializeField] private VoidEventChannelSO setNextRoundParamsEventChannel;
+        [SerializeField] private VoidEventChannelSO momDeadEventChannel;
         [SerializeField] private FloatEventChannelSO updateMomUIEventChannel;
         [SerializeField] private BoolEventChannelSO showMomUIEventChannel;
         [SerializeField] private VoidEventChannelSO timerStartEventChannel;
@@ -63,25 +63,19 @@ namespace Mom
         void Start()
         {
             spawnMomEventChannel.OnEventRaised += StartWalkInState;
-            levelStartEventChannel.OnEventRaised += StartRestState;
-            levelLoadEventChannel.OnEventRaised += PutBehindDoor;
-            levelFailedEventChannel.OnEventRaised += StartAngryState;
+            levelEventChannel.OnEventRaised += OnLevelEventRaised;
             setWaitTimeEventChannel.OnEventRaised += SetWaitTime;
             setNRoundsEventChannel.OnEventRaised += SetNRounds;
-            momWalkOutAudioEventChannel.OnEventRaised += SetWalkOutAudio;
-            momAngryAudioEventChannel.OnEventRaised += SetAngryAudio;
+            audioEventChannel.OnEventRaised += SetAudio;
         }
 
         private void OnDestroy()
         {
             spawnMomEventChannel.OnEventRaised -= StartWalkInState;
-            levelStartEventChannel.OnEventRaised -= StartRestState;
-            levelLoadEventChannel.OnEventRaised -= PutBehindDoor;
-            levelFailedEventChannel.OnEventRaised -= StartAngryState;
+            levelEventChannel.OnEventRaised -= OnLevelEventRaised;
             setWaitTimeEventChannel.OnEventRaised -= SetWaitTime;
             setNRoundsEventChannel.OnEventRaised -= SetNRounds;
-            momWalkOutAudioEventChannel.OnEventRaised -= SetWalkOutAudio;
-            momAngryAudioEventChannel.OnEventRaised -= SetAngryAudio;
+            audioEventChannel.OnEventRaised -= SetAudio;
         }
 
         private void Update()
@@ -101,7 +95,6 @@ namespace Mom
             {
                 case MomStateName.Rest:
                     newState = new RestState(this);
-                    timerStartEventChannel.RaiseEvent();
                     break;
                 case MomStateName.WalkIn:
                     newState = new WalkState(this, true);
@@ -115,6 +108,9 @@ namespace Mom
                 case MomStateName.WalkOut:
                     newState = new WalkState(this, false);
                     break;
+                case MomStateName.Dead:
+                    newState = new DeadState(this);
+                    break;
                 default:
                     break;
             }
@@ -125,18 +121,33 @@ namespace Mom
             currentState.EnterState();
         }
 
+        private void OnLevelEventRaised(LevelEventInfo data)
+        {
+            if (data.type == LevelEventType.LevelLoad) PutBehindDoor();
+            else if (data.type == LevelEventType.LevelStart) StartRestState();
+            else if (data.type == LevelEventType.LevelFailed) StartAngryState();
+        }
+
         private void PutBehindDoor()
         {
-            visualsParent.transform.position = doorTriggerLoc.position;
+            ChangeState(MomStateName.Rest);
+            //visualsParent.transform.position = doorTriggerLoc.position;
             if (doorAnimator.GetBool("IsDoorOpening"))
             {
                 doorAnimator.SetBool("IsDoorOpening", false);
             }
         }
 
+        public void StartDeadState()
+        {
+            ChangeState(MomStateName.Dead);
+            momDeadEventChannel.RaiseEvent();
+        }
+
         public void StartRestState()
         {
             ChangeState(MomStateName.Rest);
+            timerStartEventChannel.RaiseEvent();
         }
 
         public void StartWalkInState()
@@ -236,19 +247,17 @@ namespace Mom
                     return lookAroundAudio;
                 case MomStateName.GetAngry:
                     return angryAudio;
+                case MomStateName.Dead:
+                    return deadAudio;
                 default:
                     return null;
             }
         }
 
-        private void SetWalkOutAudio(AudioClip audio)
+        private void SetAudio(AudioEventInfo data)
         {
-            walkOutAudio.clip = audio;
-        }
-
-        private void SetAngryAudio(AudioClip audio)
-        {
-            angryAudio.clip = audio;
+            if (data.type == AudioType.MomWalkOut) walkOutAudio.clip = data.clip;
+            else if (data.type == AudioType.MomAngry) angryAudio.clip = data.clip;
         }
 
         public AudioSource GetDoorAudio(bool doorOpen)

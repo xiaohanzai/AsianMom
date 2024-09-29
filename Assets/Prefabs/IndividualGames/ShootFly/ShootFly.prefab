@@ -56,10 +56,7 @@ MonoBehaviour:
     type: 2}
   gameStartEventChannel: {fileID: 11400000, guid: 2256128526c8a445f9e6a9f5e718a719,
     type: 2}
-  levelLoadEventChannel: {fileID: 11400000, guid: 1992b7052c9c94549a8403b93e68f5c6,
-    type: 2}
-  levelCompleteEventChannel: {fileID: 11400000, guid: cc996eaae2c1040c4a5728dfdd8e4486,
-    type: 2}
+  levelEventChannel: {fileID: 11400000, guid: 96dfc3e519c9945bf9bad153639f8852, type: 2}
 --- !u!1001 &8541307695954334416
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 5101594210428802023}
   m_Layer: 0
   m_Name: Hammer
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -290,7 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa9cdfb32c1a4941b68cae5caf0b78b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transformEventChannel: {fileID: 11400000, guid: a9d1a11595844464f93619933aae74b1,
+  setPropLocEventChannel: {fileID: 11400000, guid: a9d1a11595844464f93619933aae74b1,
     type: 2}
 --- !u!1 &5939228072627190420
 GameObject:
@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 6396385601260712668}
   m_Layer: 0
   m_Name: HammerCollider
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -432,7 +432,7 @@ PositionConstraint:
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: 0, y: 0.485, z: 0}
-  m_TranslationOffset: {x: 0.1157636, y: 0.002797842, z: -0.000521589}
+  m_TranslationOffset: {x: 0.1157636, y: 0.002797842, z: -0.00052160025}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1

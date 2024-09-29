@@ -23,7 +23,7 @@ namespace PaintingGame
         Green,
         Orange,
         Yellow,
-        Purple,
+        SkinTone,
         Black,
     }
 }

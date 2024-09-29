@@ -20,8 +20,7 @@ namespace WhackAMole
 
         [Header("Listening to")]
         [SerializeField] private IndividualGameEventChannelSO gameStartEventChannel;
-        [SerializeField] private VoidEventChannelSO levelLoadEventChannel;
-        [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
 
         private List<Mole> moles = new List<Mole>(); // all the instantiated moles
         private List<Mole> aliveMoles = new List<Mole>(); // only the alive moles
@@ -33,14 +32,13 @@ namespace WhackAMole
 
         private void Awake()
         {
-            levelLoadEventChannel.OnEventRaised += PrepGame; // need to subscribe before level start events are raised
+            levelEventChannel.OnEventRaised += OnLevelEventRaised; // need to subscribe before level start events are raised
             spawnObjectsEventChannel.OnObjectsSpawned += PrepMoles;
         }
 
         void Start()
         {
             gameStartEventChannel.OnEventRaised += StartGame;
-            levelCompleteEventChannel.OnEventRaised += OnLevelComplete;
 
             totalTime = 2 * moveTime + waitTime + 0.5f;
         }
@@ -48,8 +46,7 @@ namespace WhackAMole
         private void OnDestroy()
         {
             gameStartEventChannel.OnEventRaised -= StartGame;
-            levelLoadEventChannel.OnEventRaised -= PrepGame;
-            levelCompleteEventChannel.OnEventRaised -= OnLevelComplete;
+            levelEventChannel.OnEventRaised -= OnLevelEventRaised;
             spawnObjectsEventChannel.OnObjectsSpawned -= PrepMoles;
         }
 
@@ -71,6 +68,12 @@ namespace WhackAMole
                 int ind = Random.Range(0, aliveMoles.Count);
                 aliveMoles[ind].StartPopingUp();
             }
+        }
+
+        private void OnLevelEventRaised(LevelEventInfo data)
+        {
+            if (data.type == LevelEventType.LevelLoad) PrepGame();
+            else if (data.type == LevelEventType.LevelComplete) OnLevelComplete();
         }
 
         public void PrepGame()

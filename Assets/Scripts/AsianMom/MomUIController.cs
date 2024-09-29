@@ -11,23 +11,20 @@ namespace Mom
         [SerializeField] private Image suspicionBar;
 
         [Header("Listening to")]
-        [SerializeField] private VoidEventChannelSO levelStartEventChannel;
-        [SerializeField] private VoidEventChannelSO levelFailedEventChannel;
+        [SerializeField] private LevelEventChannelSO levelEventChannel;
         [SerializeField] private FloatEventChannelSO updateMomUIEventChannel;
         [SerializeField] private BoolEventChannelSO showMomUIEventChannel;
 
         private void Start()
         {
-            levelStartEventChannel.OnEventRaised += ResetSuspicionBar;
-            levelFailedEventChannel.OnEventRaised += SetMaxSuspicionBar;
+            levelEventChannel.OnEventRaised += OnLevelEventRaised;
             updateMomUIEventChannel.OnEventRaised += UpdateSuspicionBar;
             showMomUIEventChannel.OnEventRaised += EnableSuspicionBar;
         }
 
         private void OnDestroy()
         {
-            levelStartEventChannel.OnEventRaised -= ResetSuspicionBar;
-            levelFailedEventChannel.OnEventRaised -= SetMaxSuspicionBar;
+            levelEventChannel.OnEventRaised -= OnLevelEventRaised;
             updateMomUIEventChannel.OnEventRaised -= UpdateSuspicionBar;
             showMomUIEventChannel.OnEventRaised -= EnableSuspicionBar;
         }
@@ -43,6 +40,12 @@ namespace Mom
                     suspicionBarParent.transform.rotation = Quaternion.LookRotation(directionToCamera);
                 }
             }
+        }
+
+        private void OnLevelEventRaised(LevelEventInfo data)
+        {
+            if (data.type == LevelEventType.LevelStart) ResetSuspicionBar();
+            else if (data.type == LevelEventType.LevelFailed) SetMaxSuspicionBar();
         }
 
         private void ResetSuspicionBar()

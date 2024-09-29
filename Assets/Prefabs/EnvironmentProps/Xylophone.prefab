@@ -723,7 +723,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ff647d38876a94cce987d915b1e59d50, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a1c83b280ec454aaf984e08845221bae, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -880,8 +880,7 @@ MonoBehaviour:
     type: 2}
   gameStartEventChannel: {fileID: 11400000, guid: 2256128526c8a445f9e6a9f5e718a719,
     type: 2}
-  levelCompleteEventChannel: {fileID: 11400000, guid: cc996eaae2c1040c4a5728dfdd8e4486,
-    type: 2}
+  levelEventChannel: {fileID: 11400000, guid: 96dfc3e519c9945bf9bad153639f8852, type: 2}
 --- !u!65 &7673390405672731727
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -934,7 +933,7 @@ GameObject:
   - component: {fileID: 7719225987722726387}
   m_Layer: 6
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1106,7 +1105,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 9e26f4b12b1d4427ebdec4e6c7828406, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 272c7d7307a0c49c0828217f25cd3901, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1234,7 +1233,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: a9ee2ec7f8a174e8ba315580df0d5baf, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 5b4b96497494c44cab61eaa410c681a3, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1362,7 +1361,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 338f6200ed8614fdbb3dcccb1eba66df, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 568dc463a5a6144dd83c9daf1d51304f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1635,7 +1634,7 @@ GameObject:
   - component: {fileID: 1319943832427514943}
   m_Layer: 6
   m_Name: Drumstick
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2061,7 +2060,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d626908758afd46768f9229fac296b2e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 016f3efac052947dc8bff97f9327a988, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -2272,7 +2271,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 2ec9c337aeefa47ada615fde4ef601cf, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 097a83af65a6f4056a3d96abfa79001a, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -2683,7 +2682,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 9565b9f62e41d45cc95ba686f0fd0daa, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 622808b2d4444446cb00d62ea166fc68, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -2931,8 +2930,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.82273144}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.18936157, y: -9.034647}
-  m_SizeDelta: {x: -118.96579, y: -0.9894066}
+  m_AnchoredPosition: {x: 0, y: -17.5}
+  m_SizeDelta: {x: 0, y: 15.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8996893850503984264
 CanvasRenderer:
@@ -2962,7 +2961,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Play this music:'
+  m_text: 'Play this music:
+
+    <color=red><size=36>(start over if hit a wrong key)</size></color>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2989,8 +2990,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
-  m_fontSizeBase: 72
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3878,7 +3879,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 26c30fb73d4e846f7b5b57852d30948d, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 13ede1039ab14468ab9418de7de8323f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

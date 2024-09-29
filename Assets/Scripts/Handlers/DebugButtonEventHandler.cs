@@ -85,7 +85,7 @@ public class DebugButtonEventHandler : MonoBehaviour
         {
             if (handler.GetCurrentGameName() == name)
             {
-                handler.StartGame(true);
+                handler.RaiseEvent();
             }
         }
     }

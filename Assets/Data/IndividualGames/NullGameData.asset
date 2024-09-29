@@ -16,6 +16,6 @@ MonoBehaviour:
   gamePrefab: {fileID: 0}
   buttonText: Stop Playing
   instructionText: Pretend to be studying... Or choose a goof-off activity from the
-    tablet?
+    tablet?  <color=#ff0000>Poke</color> each button to play.
   instructionVideo: {fileID: 32900000, guid: 82ac76c9e04c94a329ad43aa9a459578, type: 3}
   audio: {fileID: 8300000, guid: e8331245c7bbf4df2b94e28de161d703, type: 3}

@@ -14,25 +14,33 @@ public class DeskAudioManager : MonoBehaviour
     [Header("Listening to")]
     [SerializeField] private VoidEventChannelSO spawnMomEventChannel;
     [SerializeField] private PokeButtonEventChannelSO pokeButtonEventChannel;
-    [SerializeField] private AudioEventChannelSO deskAudioEventChannel;
-    [SerializeField] private VoidEventChannelSO levelCompleteEventChannel;
+    [SerializeField] private AudioEventChannelSO audioEventChannel;
+    [SerializeField] private LevelEventChannelSO levelEventChannel;
 
     void Start()
     {
-        deskAudioEventChannel.OnEventRaised += PlayIndividualGameAudio;
+        audioEventChannel.OnEventRaised += PlayIndividualGameAudio;
         spawnMomEventChannel.OnEventRaised += PlayAlarmAudio;
-        pokeButtonEventChannel.OnEventRaised += PlayComputerStartAudio;
-        levelCompleteEventChannel.OnEventRaised += StopIndividualGameAudio;
-        deskAudioEventChannel.OnEventRaised += PlayIndividualGameAudio;
+        pokeButtonEventChannel.OnEventRaised += OnPokeButtonEventRaised;
+        levelEventChannel.OnEventRaised += OnLevelEventRaised;
     }
 
     private void OnDestroy()
     {
-        deskAudioEventChannel.OnEventRaised -= PlayIndividualGameAudio;
+        audioEventChannel.OnEventRaised -= PlayIndividualGameAudio;
         spawnMomEventChannel.OnEventRaised -= PlayAlarmAudio;
-        pokeButtonEventChannel.OnEventRaised -= PlayComputerStartAudio;
-        levelCompleteEventChannel.OnEventRaised -= StopIndividualGameAudio;
-        deskAudioEventChannel.OnEventRaised -= PlayIndividualGameAudio;
+        pokeButtonEventChannel.OnEventRaised -= OnPokeButtonEventRaised;
+        levelEventChannel.OnEventRaised -= OnLevelEventRaised;
+    }
+
+    private void OnLevelEventRaised(LevelEventInfo data)
+    {
+        if (data.type == LevelEventType.LevelComplete || data.type == LevelEventType.LevelFailed || data.type == LevelEventType.LevelFailedOther) StopIndividualGameAudio();
+    }
+
+    private void OnPokeButtonEventRaised(PokeButtonType type)
+    {
+        if (type == PokeButtonType.ConfirmEnvironment) PlayComputerStartAudio();
     }
 
     private void PlayAlarmAudio()
@@ -46,16 +54,16 @@ public class DeskAudioManager : MonoBehaviour
         alarmAudio.Stop();
     }
 
-    private void PlayComputerStartAudio(PokeButtonType type)
+    private void PlayComputerStartAudio()
     {
-        if (type != PokeButtonType.ConfirmEnvironment) return;
         computerStartAudio.Play();
     }
 
-    private void PlayIndividualGameAudio(AudioClip data)
+    private void PlayIndividualGameAudio(AudioEventInfo data)
     {
-        individualGameAudio.clip = data;
-        if (data != null) individualGameAudio.Play();
+        if (data.type != AudioType.Desk) return;
+        individualGameAudio.clip = data.clip;
+        if (individualGameAudio.clip != null) individualGameAudio.Play();
     }
 
     private void StopIndividualGameAudio()

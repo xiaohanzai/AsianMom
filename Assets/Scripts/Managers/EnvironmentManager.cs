@@ -17,7 +17,7 @@ public class EnvironmentManager : MonoBehaviour
     void Start()
     {
         if(pokeButtonEventChannel != null)
-            pokeButtonEventChannel.OnEventRaised += OnPokeButtonEvent;
+            pokeButtonEventChannel.OnEventRaised += OnPokeButtonEventRaised;
         if (spawnObjectsEventChannel != null)
             spawnObjectsEventChannel.OnEventRaised += SpawnObjects;
     }
@@ -25,14 +25,14 @@ public class EnvironmentManager : MonoBehaviour
     private void OnDestroy()
     {
         if (pokeButtonEventChannel != null)
-            pokeButtonEventChannel.OnEventRaised -= OnPokeButtonEvent;
+            pokeButtonEventChannel.OnEventRaised -= OnPokeButtonEventRaised;
         if (spawnObjectsEventChannel != null)
             spawnObjectsEventChannel.OnEventRaised -= SpawnObjects;
 
         //spawnObjectsEventChannel.ClearAllSpawnedObjects();
     }
 
-    private void OnPokeButtonEvent(PokeButtonType data)
+    private void OnPokeButtonEventRaised(PokeButtonType data)
     {
         switch (data)
         {

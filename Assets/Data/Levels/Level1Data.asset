@@ -19,8 +19,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dceca0e1dd11b4c60b0cbf321fae7620, type: 2}
   instructionText: Your Asian mom wants you to study, but you don't want to study. 
     Complete all the goof-off activities to pass this level, but do not get discovered
-    by mom!  Mom will come check in with you every once in a while!  Click on each
-    game on tablet to play
+    by mom!  Mom will come check in with you every once in a while!  Poke each game
+    on tablet to play.  Poke <color=#ff0000><size=72>Enter</size></color> on keyboard
+    to start.
   timeIntervalMax: 35
   timeIntervalMin: 35
   waitTime: 5

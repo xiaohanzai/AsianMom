@@ -15,7 +15,7 @@ public class SpawnMomManager : MonoBehaviour
     [Header("Listening to")]
     [SerializeField] private SpawnMomParametersEventChannelSO setSpawnMomParametersEventChannel;
     [SerializeField] private VoidEventChannelSO timeUpEventChannel;
-    [SerializeField] private VoidEventChannelSO levelStartEventChannel;
+    [SerializeField] private LevelEventChannelSO levelEventChannel;
     [SerializeField] private VoidEventChannelSO setNextRoundParamsEventChannel;
 
     [Header("Broadcasting on")]
@@ -28,7 +28,7 @@ public class SpawnMomManager : MonoBehaviour
     {
         setSpawnMomParametersEventChannel.OnEventRaised += SetSpawnMomParameters;
         timeUpEventChannel.OnEventRaised += SpawnMom;
-        levelStartEventChannel.OnEventRaised += SetInitialTimes;
+        levelEventChannel.OnEventRaised += OnLevelEventRaised;
         setNextRoundParamsEventChannel.OnEventRaised += SetNextRoundTimes;
     }
 
@@ -36,8 +36,13 @@ public class SpawnMomManager : MonoBehaviour
     {
         setSpawnMomParametersEventChannel.OnEventRaised -= SetSpawnMomParameters;
         timeUpEventChannel.OnEventRaised -= SpawnMom;
-        levelStartEventChannel.OnEventRaised -= SetInitialTimes;
+        levelEventChannel.OnEventRaised -= OnLevelEventRaised;
         setNextRoundParamsEventChannel.OnEventRaised -= SetNextRoundTimes;
+    }
+
+    private void OnLevelEventRaised(LevelEventInfo data)
+    {
+        if (data.type == LevelEventType.LevelStart) SetInitialTimes();
     }
 
     private void SetInitialTimes()

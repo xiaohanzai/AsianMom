@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126fc9d632cdb4a20a41c6ce79802a91, type: 3}
   m_Name: PaintingData1
   m_EditorClassIdentifier: 
-  image: {fileID: 21300000, guid: 77d51bee566e94404aa1c49925208ed7, type: 3}
-  paintingPatternsParent: {fileID: 602898921271401211, guid: b5498c3e9d9e44148b2e3bce2ce6cb6e,
+  image: {fileID: 21300000, guid: 3efbeb4a1b6184849840fb3180584353, type: 3}
+  paintingPatternsParent: {fileID: 2928836821190305863, guid: f71c2362a82394580ad27fc30327308d,
     type: 3}
