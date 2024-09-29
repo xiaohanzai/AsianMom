@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dbea64f9ff6949ceaaa38fcb984f9ae, type: 3}
+  m_Name: DoorAndMom
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1961640965264807028, guid: ed0ac519a64b4427890b49bc595cca34, type: 3}
+  spawnAmount: 1
+  maxIterations: 100
+  minRadius: 0.5
+  spawnLocation: 0
+  labels: 32869
+  visualizationColor: {r: 1, g: 0, b: 0, a: 1}
