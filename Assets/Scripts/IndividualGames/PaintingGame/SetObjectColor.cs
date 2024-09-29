@@ -40,10 +40,10 @@ namespace PaintingGame
                     c = Color.green;
                     break;
                 case PaintingColor.Orange:
-                    c = new Color(231f/256, 123f/256, 0);
+                    c = new Color(250f/256, 160f/256, 34f / 256);
                     break;
                 case PaintingColor.Yellow:
-                    c = new Color(255f / 256, 253f / 256, 123f / 256);
+                    c = new Color(255f / 256, 232f / 256, 143f / 256);
                     break;
                 case PaintingColor.SkinTone:
                     c = new Color(238f / 256, 202f / 256, 170f / 256);
