@@ -1,12 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace PaintingGame
 {
     public class SetObjectColor : MonoBehaviour
     {
-        [SerializeField] private MeshRenderer meshRenderer;
+        [SerializeField] private List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
+
+        private Color[] originalColors;
+
+        private void Awake()
+        {
+            if (meshRenderers.Count == 0)
+            {
+                meshRenderers.Add(GetComponent<MeshRenderer>());
+                meshRenderers.AddRange(transform.GetComponentsInChildren<MeshRenderer>().ToList());
+            }
+            originalColors = new Color[meshRenderers.Count];
+            for (int i = 0; i < meshRenderers.Count; i++)
+            {
+                originalColors[i] = meshRenderers[i].material.color;
+            }
+        }
 
         public void SetColor(PaintingColor paintingColor)
         {
@@ -23,13 +40,13 @@ namespace PaintingGame
                     c = Color.green;
                     break;
                 case PaintingColor.Orange:
-                    c = new Color(1, 0.5f, 0);
+                    c = new Color(231f/256, 123f/256, 0);
                     break;
                 case PaintingColor.Yellow:
-                    c = Color.yellow;
+                    c = new Color(255f / 256, 253f / 256, 123f / 256);
                     break;
-                case PaintingColor.Purple:
-                    c = Color.magenta;
+                case PaintingColor.SkinTone:
+                    c = new Color(238f / 256, 202f / 256, 170f / 256);
                     break;
                 case PaintingColor.Black:
                     c = Color.black;
@@ -37,13 +54,23 @@ namespace PaintingGame
                 default:
                     break;
             }
-            meshRenderer.material.color = c;
-            Debug.Log("called");
+            for (int i = 0; i < meshRenderers.Count; i++) meshRenderers[i].material.color = c;
+        }
+
+        public void SetColor(PaintingColor paintingColor, bool b)
+        {
+            if (b)
+            {
+                for (int i = 0; i < meshRenderers.Count; i++) meshRenderers[i].material.color = originalColors[i];
+                return;
+            }
+
+            SetColor(paintingColor);
         }
 
         public void ResetColor()
         {
-            meshRenderer.material.color = Color.white;
+            for (int i = 0; i < meshRenderers.Count; i++) meshRenderers[i].material.color = Color.white;
         }
     }
 }

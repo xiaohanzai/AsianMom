@@ -29,7 +29,7 @@ namespace PaintingGame
             if (paintBrushCollider != null)
             {
                 currentColor = paintBrushCollider.GetCurrentColor();
-                GetComponent<SetObjectColor>().SetColor(currentColor);
+                GetComponent<SetObjectColor>().SetColor(currentColor, currentColor == correctColor);
                 Evt_OnPatternColored.Invoke(this, currentColor == correctColor);
             }
         }

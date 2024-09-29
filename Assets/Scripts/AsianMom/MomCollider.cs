@@ -8,10 +8,16 @@ namespace Mom
     {
         [SerializeField] private MomController momController;
 
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.tag == "Weapon")
+            {
+                momController.StartDeadState();
+            }
+        }
+
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log(other.tag);
-            Debug.Log(other.name);
             if (other.tag == "Weapon")
             {
                 momController.StartDeadState();

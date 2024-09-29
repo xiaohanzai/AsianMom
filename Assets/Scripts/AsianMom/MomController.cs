@@ -95,7 +95,6 @@ namespace Mom
             {
                 case MomStateName.Rest:
                     newState = new RestState(this);
-                    timerStartEventChannel.RaiseEvent();
                     break;
                 case MomStateName.WalkIn:
                     newState = new WalkState(this, true);
@@ -111,7 +110,6 @@ namespace Mom
                     break;
                 case MomStateName.Dead:
                     newState = new DeadState(this);
-                    momDeadEventChannel.RaiseEvent();
                     break;
                 default:
                     break;
@@ -132,7 +130,8 @@ namespace Mom
 
         private void PutBehindDoor()
         {
-            visualsParent.transform.position = doorTriggerLoc.position;
+            ChangeState(MomStateName.Rest);
+            //visualsParent.transform.position = doorTriggerLoc.position;
             if (doorAnimator.GetBool("IsDoorOpening"))
             {
                 doorAnimator.SetBool("IsDoorOpening", false);
@@ -142,11 +141,13 @@ namespace Mom
         public void StartDeadState()
         {
             ChangeState(MomStateName.Dead);
+            momDeadEventChannel.RaiseEvent();
         }
 
         public void StartRestState()
         {
             ChangeState(MomStateName.Rest);
+            timerStartEventChannel.RaiseEvent();
         }
 
         public void StartWalkInState()

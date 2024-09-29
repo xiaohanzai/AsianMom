@@ -228,7 +228,8 @@ public class LevelManager : MonoBehaviour
 
     private void SetLevelFailedOther()
     {
-        Invoke("DelayedSetLevelFailedOther", 1f);
+        //Invoke("DelayedSetLevelFailedOther", 1f);
+        DelayedSetLevelFailedOther(); // TODO: I think if we call invoke we need a bool to prevent this function from being called again.
     }
 
     private void DelayedSetLevelFailedOther()
